@@ -29,7 +29,7 @@ if (!$db_selected) {
 </head>
 <body>
     <!-- Existing Navigation Bar -->
-    <nav class="navbar bg-body-tertiary fixed-top">
+    <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
@@ -68,7 +68,7 @@ if (!$db_selected) {
                             <a class="nav-link" href="../resto/restaurants.php">Restaurants</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../events/events.php">Events</a>
+                            <a class="nav-link" href="/project-study/events/events.php">Events</a>
                         </li>
                     </ul>
                     <form class="d-flex mt-3" role="search">
