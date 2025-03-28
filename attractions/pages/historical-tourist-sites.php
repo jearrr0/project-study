@@ -77,75 +77,57 @@ if (!$db_selected) {
     </div>
 
     <main>
-        <section class="section">
-            <h2>All "Historical Tourist Sites" results in Candon City</h2>
-            <div class="content">
-            <style>
-    .carousel img {
-        width: 500; /* Set width */
-        height: 270px; /* Set height */
-        object-fit: cover; /* Ensure images fit without distortion */
-    }
-</style>
+    <section class="section">
+    <h2>Historical Tourist Sites</h2>
+    <div class="content">
+        <?php
+        $sql = "SELECT * FROM historical_tourist_sites";
+        $result = $conn->query($sql);
 
-<section class="container mt-4">
-    <div class="row align-items-center">
-        <!-- Carousel (Left Side) -->
-        <div class="col-md-6">
-            <div id="carouselExampleDark" class="carousel carousel-dark slide">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="10000">
-                        <img src="../../uploads/home/1 (1).jpg" class="d-block w-100" alt="First Slide">
-                    </div>
-                    <div class="carousel-item" data-bs-interval="2000">
-                        <img src="../../uploads/home/1 (2).jpg" class="d-block w-100" alt="Second Slide">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="../../uploads/home/1 (3).jpg" class="d-block w-100" alt="Third Slide">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-            </div>
-        </div>
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<div class="tourist-site-item d-flex mb-4 p-3">';
+                echo '<div id="carousel-' . $row['id'] . '" class="carousel slide me-4" data-bs-ride="carousel" style="width: 300px;">';
+                echo '<div class="carousel-inner">';
 
-        <!-- Content (Right Side) -->
-        <div class="col-md-6">
-            <div class="carousel-content">
-                <h5 id="carouselTitle">First Tourist Spot</h5>
-                <p id="carouselDescription">Explore this beautiful location.</p>
-                <a id="carouselLink" href="https://www.google.com/maps/search/?api=1&query=First+Tourist+Spot+Candon+City" target="_blank" class="btn btn-primary">Get Directions</a>
-            </div>
-        </div>
+                // Convert BLOB images to base64
+                $images = [];
+                if (!empty($row['img']))  $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img']);
+                if (!empty($row['img1'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img1']);
+                if (!empty($row['img2'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img2']);
+                if (!empty($row['img3'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img3']);
+
+                // Loop through images and add to carousel
+                foreach ($images as $index => $image) {
+                    echo '<div class="carousel-item ' . ($index === 0 ? 'active' : '') . '">';
+                    echo '<img src="' . $image . '" class="d-block w-100" alt="Tourist Site Image">';
+                    echo '</div>';
+                }
+
+                echo '</div>';
+                echo '<button class="carousel-control-prev" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="prev">';
+                echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Previous</span>';
+                echo '</button>';
+                echo '<button class="carousel-control-next" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="next">';
+                echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Next</span>';
+                echo '</button>';
+                echo '</div>';
+                echo '<div>';
+                echo '<h3 class="mb-3">' . $row['title'] . '</h3>';
+                echo '<p class="text-muted">' . $row['description'] . '</p>';
+                echo '<p><strong>Location:</strong> <a href="https://www.google.com/maps/search/?api=1&query=' . $row['latitude'] . ',' . $row['longitude'] . '" target="_blank">View on Map</a></p>';
+                echo '<a href="historical-site-details.php?id=' . $row['id'] . '" class="btn btn-secondary">View More</a>';
+                echo '</div>';
+                echo '</div>';
+            }
+        } else {
+            echo '<p>No historical sites found.</p>';
+        }
+        ?>
     </div>
 </section>
-
-<script>
-    // Update content dynamically when the carousel slides
-    document.getElementById('carouselExampleDark').addEventListener('slid.bs.carousel', function (event) {
-        const titles = ["First Tourist Spot", "Second Tourist Spot", "Third Tourist Spot"];
-        const descriptions = ["Explore this beautiful location.", "Visit this amazing place.", "Enjoy the view at this site."];
-        const links = [
-            "https://www.google.com/maps/search/?api=1&query=First+Tourist+Spot+Candon+City",
-            "https://www.google.com/maps/search/?api=1&query=Second+Tourist+Spot+Candon+City",
-            "https://www.google.com/maps/search/?api=1&query=Third+Tourist+Spot+Candon+City"
-        ];
-
-        let activeIndex = event.to;
-        document.getElementById('carouselTitle').innerText = titles[activeIndex];
-        document.getElementById('carouselDescription').innerText = descriptions[activeIndex];
-        document.getElementById('carouselLink').href = links[activeIndex];
-    });
-</script>
 
     </main>
 

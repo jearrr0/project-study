@@ -85,12 +85,61 @@ if (!$db_selected) {
         </div>
     </div>
     <main>
-        <section class="section">
-            <h2>Restaurants</h2>
-            <div class="content">
-                <!-- Content goes here -->
-            </div>
-        </section>
+    <section class="section">
+    <h2>Restaurants</h2>
+    <div class="content">
+    <?php
+    $sql = "SELECT * FROM resto";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<div class="resto-item d-flex mb-4 p-3">';
+            echo '<div id="carousel-' . $row['id'] . '" class="carousel slide me-4" data-bs-ride="carousel" style="width: 300px;">';
+            echo '<div class="carousel-inner">';
+            
+            // Storing images in an array
+            $images = [];
+            if (!empty($row['img'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img']);
+            if (!empty($row['img1'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img1']);
+            if (!empty($row['img2'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img2']);
+            if (!empty($row['img3'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img3']);
+
+            // Display images in Bootstrap Carousel
+            foreach ($images as $index => $image) {
+                echo '<div class="carousel-item ' . ($index === 0 ? 'active' : '') . '">';
+                echo '<img src="' . $image . '" class="d-block w-100" alt="Restaurant Image">';
+                echo '</div>';
+            }
+
+            echo '</div>';
+            echo '<button class="carousel-control-prev" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="prev">';
+            echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+            echo '<span class="visually-hidden">Previous</span>';
+            echo '</button>';
+            echo '<button class="carousel-control-next" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="next">';
+            echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+            echo '<span class="visually-hidden">Next</span>';
+            echo '</button>';
+            echo '</div>';
+
+            // Restaurant details
+            echo '<div>';
+            echo '<h3 class="mb-3">' . htmlspecialchars($row['title']) . '</h3>';
+            echo '<p class="text-muted">' . htmlspecialchars($row['description']) . '</p>';
+            echo '<a href="https://www.google.com/maps/dir/?api=1&destination=' . $row['latitude'] . ',' . $row['longitude'] . '" target="_blank" class="btn btn-primary me-2">Get Directions</a>';
+            echo '<a href="resto-details.php?id=' . $row['id'] . '" class="btn btn-secondary">View More</a>';
+            echo '</div>';
+
+            echo '</div>'; // Close resto-item div
+        }
+    } else {
+        echo '<p>No restaurants found.</p>';
+    }
+    ?>
+    </div>
+</section>
+
     </main>
     <footer>
         <p>REPUBLIC OF THE PHILIPPINES</p>

@@ -85,12 +85,77 @@ if (!$db_selected) {
         </div>
     </div>
     <main>
-        <section class="section">
-            <h2>Livelihoods</h2>
-            <div class="content">
-                <!-- Content goes here -->
-            </div>
-        </section>
+    <section class="section">
+    <h2>Livelihood Programs</h2>
+    <div class="content">
+        <?php
+        // Database Connection
+        $servername = "localhost";
+        $username = "root"; // Change if needed
+        $password = ""; // Change if needed
+        $dbname = "candonxplore_db"; // Adjust as needed
+
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Fetch Livelihood Data
+        $sql = "SELECT * FROM livelihood";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<div class="tourist-site-item d-flex mb-4 p-3">';
+
+                // Carousel Container
+                echo '<div id="carousel-' . $row['id'] . '" class="carousel slide me-4" data-bs-ride="carousel" style="width: 300px;">';
+                echo '<div class="carousel-inner">';
+
+                // Convert BLOB images to base64
+                $images = [];
+                if (!empty($row['img']))  $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img']);
+                if (!empty($row['img1'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img1']);
+                if (!empty($row['img2'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img2']);
+                if (!empty($row['img3'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img3']);
+
+                // Loop through images and add to carousel
+                foreach ($images as $index => $image) {
+                    echo '<div class="carousel-item ' . ($index === 0 ? 'active' : '') . '">';
+                    echo '<img src="' . $image . '" class="d-block w-100" alt="Livelihood Image">';
+                    echo '</div>';
+                }
+
+                echo '</div>';
+                echo '<button class="carousel-control-prev" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="prev">';
+                echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Previous</span>';
+                echo '</button>';
+                echo '<button class="carousel-control-next" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="next">';
+                echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Next</span>';
+                echo '</button>';
+                echo '</div>'; // End of carousel
+
+                // Facility Details
+                echo '<div>';
+                echo '<h3 class="mb-3">' . $row['title'] . '</h3>';
+                echo '<p class="text-muted">' . $row['description'] . '</p>';
+                echo '<p><strong>Location:</strong> <a href="https://www.google.com/maps/search/?api=1&query=' . $row['latitude'] . ',' . $row['longitude'] . '" target="_blank">View on Map</a></p>';
+                echo '<a href="livelihood-details.php?id=' . $row['id'] . '" class="btn btn-secondary">View More</a>';
+                echo '</div>';
+
+                echo '</div>'; // End of tourist-site-item
+            }
+        } else {
+            echo '<p>No livelihood programs found.</p>';
+        }
+
+        $conn->close();
+        ?>
+    </div>
+</section>
+
     </main>
     <footer>
         <p>REPUBLIC OF THE PHILIPPINES</p>

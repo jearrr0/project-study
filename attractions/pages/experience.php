@@ -85,96 +85,77 @@ if (!$db_selected) {
         </div>
     </div>
     <main>
-        <section class="section">
-            <h2>Experience</h2>
-            <div class="content">
-            <?php
-// Database connection
-$host = "localhost";
-$username = "root"; // Change if needed
-$password = "";
-$database = "candonxplore_db";
+    <section class="section">
+    <h2>Tourist Experiences</h2>
+    <div class="content">
+        <?php
+        // Database Connection
+        $servername = "localhost";
+        $username = "root"; // Adjust if needed
+        $password = ""; // Adjust if needed
+        $dbname = "candonxplore_db"; // Adjust if needed
 
-$conn = new mysqli($host, $username, $password, $database);
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+        // Fetch Experience Data
+        $sql = "SELECT * FROM experience"; // Changed to experience table
+        $result = $conn->query($sql);
 
-// Fetch all experiences from database
-$sql = "SELECT * FROM experience";
-$result = $conn->query($sql);
-?>
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<div class="tourist-site-item d-flex mb-4 p-3">';
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experience</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+                // Carousel Container
+                echo '<div id="carousel-' . $row['id'] . '" class="carousel slide me-4" data-bs-ride="carousel" style="width: 300px;">';
+                echo '<div class="carousel-inner">';
 
-<div class="container mt-4">
-    <?php while ($row = $result->fetch_assoc()): ?>
-        <div class="row mb-5">
-            <!-- Carousel Section -->
-            <div class="col-md-6">
-                <div id="carousel-<?php echo $row['id']; ?>" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <?php
-                        $images = ['img', 'img1', 'img2', 'img3'];
-                        $first = true;
-                        foreach ($images as $imgField):
-                            if (!empty($row[$imgField])): 
-                                // Debugging: Check if image data exists
-                                // Uncomment the line below to debug
-                                // echo '<pre>' . print_r($row[$imgField], true) . '</pre>';
-                        ?>
-                            <div class="carousel-item <?php echo $first ? 'active' : ''; ?>">
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($row[$imgField]); ?>" class="d-block w-100" alt="Slide">
-                            </div>
-                        <?php 
-                            $first = false;
-                            endif;
-                        endforeach; 
-                        ?>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Content Section -->
-            <div class="col-md-6 d-flex flex-column justify-content-center">
-                <h2><?php echo htmlspecialchars($row['title']); ?></h2>
-                <p><?php echo nl2br(htmlspecialchars($row['description'])); ?></p>
-                <div>
-                    <a href="<?php echo !empty($row['view_more_link']) ? htmlspecialchars($row['view_more_link']) : '#'; ?>" class="btn btn-primary me-2">View More</a>
-                    <a href="<?php echo !empty($row['api_directions']) ? htmlspecialchars($row['api_directions']) : '#'; ?>" class="btn btn-success">Get Directions</a>
-                </div>
-            </div>
-        </div>
-    <?php endwhile; ?>
-</div>
+                // Convert BLOB images to base64
+                $images = [];
+                if (!empty($row['img']))  $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img']);
+                if (!empty($row['img1'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img1']);
+                if (!empty($row['img2'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img2']);
+                if (!empty($row['img3'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img3']);
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                // Loop through images and add to carousel
+                foreach ($images as $index => $image) {
+                    echo '<div class="carousel-item ' . ($index === 0 ? 'active' : '') . '">';
+                    echo '<img src="' . $image . '" class="d-block w-100" alt="Tourist Experience Image">';
+                    echo '</div>';
+                }
 
-<?php
-$conn->close();
-?>
+                echo '</div>';
+                echo '<button class="carousel-control-prev" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="prev">';
+                echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Previous</span>';
+                echo '</button>';
+                echo '<button class="carousel-control-next" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="next">';
+                echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Next</span>';
+                echo '</button>';
+                echo '</div>'; // End of carousel
 
-            </div>
-        </section>
+                // Experience Details
+                echo '<div>';
+                echo '<h3 class="mb-3">' . $row['title'] . '</h3>';
+                echo '<p class="text-muted">' . $row['description'] . '</p>';
+                echo '<p><strong>Location:</strong> <a href="https://www.google.com/maps/search/?api=1&query=' . $row['latitude'] . ',' . $row['longitude'] . '" target="_blank">View on Map</a></p>';
+                echo '<a href="experience-details.php?id=' . $row['id'] . '" class="btn btn-secondary">View More</a>';
+                echo '</div>';
+
+                echo '</div>'; // End of tourist-site-item
+            }
+        } else {
+            echo '<p>No tourist experiences found.</p>';
+        }
+
+        $conn->close();
+        ?>
+    </div>
+</section>
+
     </main>
     <footer>
         <p>REPUBLIC OF THE PHILIPPINES</p>
