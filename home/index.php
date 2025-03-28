@@ -201,7 +201,7 @@ if (!$db_selected) {
             <div id="restaurantCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <?php
-                    $sql = "SELECT * FROM restaurants";
+                    $sql = "SELECT * FROM resto";
                     $result = $conn->query($sql);
                     if ($result->num_rows > 0) {
                         $i = 0;

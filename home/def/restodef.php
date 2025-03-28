@@ -12,44 +12,31 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];
-    $description = $_POST['description'];
+    $type_of_resto = $_POST['type_of_resto'];
     $location = $_POST['location'];
-    $contact = $_POST['contact_number'];
-    $email = $_POST['email'];
-    $rooms = $_POST['rooms'];
-    $type = $_POST['type'];
-    $nearby = $_POST['nearby_places'];
-    $amenities = $_POST['amenities_facilities'];
+    $contacts = $_POST['contacts'];
+    $services = $_POST['services'];
+    $description = $_POST['description'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
 
-    // Image upload handling
-    $target_dir = "uploads/";
-    $target_file = $target_dir . basename($_FILES["img"]["name"]);
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    // Image Upload Handling
+    $best_seller_images = isset($_FILES["best_seller_images"]) && $_FILES["best_seller_images"]["error"] == 0 ? file_get_contents($_FILES["best_seller_images"]["tmp_name"]) : null;
+    $resto_image = isset($_FILES["resto_image"]) && $_FILES["resto_image"]["error"] == 0 ? file_get_contents($_FILES["resto_image"]["tmp_name"]) : null;
 
-    // Validate image type
-    $allowed_types = array("jpg", "jpeg", "png", "gif");
-    if (!in_array($imageFileType, $allowed_types)) {
-        echo "<script>alert('Invalid image format! Only JPG, JPEG, PNG & GIF files are allowed.');</script>";
-    } elseif (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
-        $img = $target_file;
+    $sql = "INSERT INTO resto (title, type_of_resto, location, contacts, services, best_seller_images, resto_image, description, latitude, longitude) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        // Use prepared statement to prevent SQL injection
-        $stmt = $conn->prepare("INSERT INTO hotels (title, description, location, contact_number, email, rooms, type, nearby_places, amenities_facilities, img, latitude, longitude) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssssss", $title, $description, $location, $contact, $email, $rooms, $type, $nearby, $amenities, $img, $latitude, $longitude);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssb bssdd", $title, $type_of_resto, $location, $contacts, $services, $best_seller_images, $resto_image, $description, $latitude, $longitude);
 
-        if ($stmt->execute()) {
-            echo "<script>alert('Hotel successfully added!');</script>";
-        } else {
-            echo "<script>alert('Error: " . $stmt->error . "');</script>";
-        }
-
-        $stmt->close();
+    if ($stmt->execute()) {
+        echo "<script>alert('Restaurant successfully added!');</script>";
     } else {
-        echo "<script>alert('Error uploading image.');</script>";
+        echo "<script>alert('Error: " . $stmt->error . "');</script>";
     }
+
+    $stmt->close();
 }
 $conn->close();
 ?>
@@ -59,7 +46,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Data Entry | CandonXplore</title>
+    <title>Restaurant Data Entry | CandonXplore</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -121,21 +108,21 @@ $conn->close();
 <body>
     <div class="container">
         <img src="logo.png" alt="CandonXplore Logo" class="logo">
-        <h2>Add a New Hotel</h2>
+        <h2>Add a New Restaurant</h2>
         <form method="POST" enctype="multipart/form-data">
-            <input type="text" name="title" placeholder="Hotel Name" required>
-            <textarea name="description" placeholder="Description" required></textarea>
+            <input type="text" name="title" placeholder="Restaurant Name" required>
+            <input type="text" name="type_of_resto" placeholder="Type of Restaurant" required>
             <input type="text" name="location" placeholder="Location" required>
-            <input type="text" name="contact_number" placeholder="Contact Number">
-            <input type="email" name="email" placeholder="Email">
-            <input type="number" name="rooms" placeholder="Number of Rooms" required>
-            <input type="text" name="type" placeholder="Type (Hotel, Resort, etc.)">
-            <textarea name="nearby_places" placeholder="Nearby Places"></textarea>
-            <textarea name="amenities_facilities" placeholder="Amenities & Facilities"></textarea>
-            <input type="file" name="img" accept="image/*" required>
+            <input type="text" name="contacts" placeholder="Contact Number">
+            <textarea name="services" placeholder="Services Offered"></textarea>
+            <textarea name="description" placeholder="Description"></textarea>
+            <label for="best_seller_images">Best Seller Images (3-4 images to upload):</label>
+            <input type="file" name="best_seller_images" accept="image/*" multiple>
+            <label for="resto_image">Restaurant Image:</label>
+            <input type="file" name="resto_image" accept="image/*">
             <input type="text" name="latitude" placeholder="Latitude" required>
             <input type="text" name="longitude" placeholder="Longitude" required>
-            <button type="submit">Add Hotel</button>
+            <button type="submit">Add Restaurant</button>
         </form>
     </div>
 </body>
