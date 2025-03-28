@@ -78,52 +78,75 @@ if (!$db_selected) {
 
     <main>
         <section class="section">
-            <h2>Historical Tourist Sites</h2>
+            <h2>All "Historical Tourist Sites" results in Candon City</h2>
             <div class="content">
-                <div id="carouselExampleDark" class="carousel carousel-dark slide">
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    </div>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" data-bs-interval="10000">
-                            <img src="../../uploads/home/1 (1).jpg" class="d-block w-100" alt="First Slide">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>First Tourist Spot</h5>
-                                <p>Explore this beautiful location.</p>
-                                <a href="https://www.google.com/maps/search/?api=1&query=First+Tourist+Spot+Candon+City" target="_blank" class="btn btn-primary">Get Directions</a>
-                            </div>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="2000">
-                            <img src="../../uploads/home/1 (2).jpg" class="d-block w-100" alt="Second Slide">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>Second Tourist Spot</h5>
-                                <p>Visit this amazing place.</p>
-                                <a href="https://www.google.com/maps/search/?api=1&query=Second+Tourist+Spot+Candon+City" target="_blank" class="btn btn-primary">Get Directions</a>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img src="../../uploads/home/1 (3).jpg" class="d-block w-100" alt="Third Slide">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>Third Tourist Spot</h5>
-                                <p>Enjoy the view at this site.</p>
-                                <a href="https://www.google.com/maps/search/?api=1&query=Third+Tourist+Spot+Candon+City" target="_blank" class="btn btn-primary">Get Directions</a>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
+            <style>
+    .carousel img {
+        width: 500; /* Set width */
+        height: 270px; /* Set height */
+        object-fit: cover; /* Ensure images fit without distortion */
+    }
+</style>
 
-                <!-- General Get Directions Button -->
-                
+<section class="container mt-4">
+    <div class="row align-items-center">
+        <!-- Carousel (Left Side) -->
+        <div class="col-md-6">
+            <div id="carouselExampleDark" class="carousel carousel-dark slide">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="10000">
+                        <img src="../../uploads/home/1 (1).jpg" class="d-block w-100" alt="First Slide">
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../../uploads/home/1 (2).jpg" class="d-block w-100" alt="Second Slide">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="../../uploads/home/1 (3).jpg" class="d-block w-100" alt="Third Slide">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
             </div>
-        </section>
+        </div>
+
+        <!-- Content (Right Side) -->
+        <div class="col-md-6">
+            <div class="carousel-content">
+                <h5 id="carouselTitle">First Tourist Spot</h5>
+                <p id="carouselDescription">Explore this beautiful location.</p>
+                <a id="carouselLink" href="https://www.google.com/maps/search/?api=1&query=First+Tourist+Spot+Candon+City" target="_blank" class="btn btn-primary">Get Directions</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Update content dynamically when the carousel slides
+    document.getElementById('carouselExampleDark').addEventListener('slid.bs.carousel', function (event) {
+        const titles = ["First Tourist Spot", "Second Tourist Spot", "Third Tourist Spot"];
+        const descriptions = ["Explore this beautiful location.", "Visit this amazing place.", "Enjoy the view at this site."];
+        const links = [
+            "https://www.google.com/maps/search/?api=1&query=First+Tourist+Spot+Candon+City",
+            "https://www.google.com/maps/search/?api=1&query=Second+Tourist+Spot+Candon+City",
+            "https://www.google.com/maps/search/?api=1&query=Third+Tourist+Spot+Candon+City"
+        ];
+
+        let activeIndex = event.to;
+        document.getElementById('carouselTitle').innerText = titles[activeIndex];
+        document.getElementById('carouselDescription').innerText = descriptions[activeIndex];
+        document.getElementById('carouselLink').href = links[activeIndex];
+    });
+</script>
+
     </main>
 
     <footer>

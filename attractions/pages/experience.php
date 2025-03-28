@@ -88,7 +88,91 @@ if (!$db_selected) {
         <section class="section">
             <h2>Experience</h2>
             <div class="content">
-                <!-- Content goes here -->
+            <?php
+// Database connection
+$host = "localhost";
+$username = "root"; // Change if needed
+$password = "";
+$database = "candonxplore_db";
+
+$conn = new mysqli($host, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch all experiences from database
+$sql = "SELECT * FROM experience";
+$result = $conn->query($sql);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="row mb-5">
+            <!-- Carousel Section -->
+            <div class="col-md-6">
+                <div id="carousel-<?php echo $row['id']; ?>" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <?php
+                        $images = ['img', 'img1', 'img2', 'img3'];
+                        $first = true;
+                        foreach ($images as $imgField):
+                            if (!empty($row[$imgField])): 
+                                // Debugging: Check if image data exists
+                                // Uncomment the line below to debug
+                                // echo '<pre>' . print_r($row[$imgField], true) . '</pre>';
+                        ?>
+                            <div class="carousel-item <?php echo $first ? 'active' : ''; ?>">
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($row[$imgField]); ?>" class="d-block w-100" alt="Slide">
+                            </div>
+                        <?php 
+                            $first = false;
+                            endif;
+                        endforeach; 
+                        ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Content Section -->
+            <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h2><?php echo htmlspecialchars($row['title']); ?></h2>
+                <p><?php echo nl2br(htmlspecialchars($row['description'])); ?></p>
+                <div>
+                    <a href="<?php echo !empty($row['view_more_link']) ? htmlspecialchars($row['view_more_link']) : '#'; ?>" class="btn btn-primary me-2">View More</a>
+                    <a href="<?php echo !empty($row['api_directions']) ? htmlspecialchars($row['api_directions']) : '#'; ?>" class="btn btn-success">Get Directions</a>
+                </div>
+            </div>
+        </div>
+    <?php endwhile; ?>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<?php
+$conn->close();
+?>
+
             </div>
         </section>
     </main>

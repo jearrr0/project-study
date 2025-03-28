@@ -151,15 +151,7 @@ if (!$db_selected) {
              <div id="hotelCarousel" class="carousel slide" data-bs-ride="carousel">
          <div class="carousel-inner">
             <?php
-            $host = "localhost";
-            $user = "root";
-            $pass = "";
-            $dbname = "candonxplore_db";
-            $conn = new mysqli($host, $user, $pass, $dbname);
-            
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+            // Use the existing database connection defined at the top of the file
 
             $sql = "SELECT * FROM hotels";
             $result = $conn->query($sql);
@@ -182,7 +174,7 @@ if (!$db_selected) {
                     echo '        <div class="card-content">';
                     echo '            <h3>' . htmlspecialchars($row["title"]) . '</h3>';
                     echo '            <p>' . htmlspecialchars($row["description"]) . '</p>';
-                    echo '            <a href="#">More Details</a>';
+                    echo '            <a href="../hotels/hotels.php">More Details</a>';
                     echo '        </div>';
                     echo '    </div>';
                     echo '</div>';
