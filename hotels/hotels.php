@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -14,210 +12,257 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$user_logged_in = isset($_SESSION['username']) ? true : false;
-$username = $user_logged_in ? $_SESSION['username'] : null;
-
-// Handle rating submission (Update instead of Insert)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rate_hotel'])) {
-    if (!$user_logged_in) {
-        echo json_encode(["status" => "error", "message" => "You must log in to rate."]);
-        exit;
-    }
-
-    $hotel_id = $_POST['hotel_id'];
-    $rating = $_POST['rating'];
-
-    // Check if user already rated this hotel
-    $check_query = "SELECT * FROM hotel_ratings WHERE hotel_id = '$hotel_id' AND uname = '$username'";
-    $check_result = $conn->query($check_query);
-
-    if ($check_result->num_rows > 0) {
-        // If rating exists, update it
-        $update_query = "UPDATE hotel_ratings SET rating = '$rating' WHERE hotel_id = '$hotel_id' AND uname = '$username'";
-        $conn->query($update_query);
-        echo json_encode(["status" => "success", "message" => "Your rating has been updated!"]);
-    } else {
-        // If no rating exists, insert new
-        $insert_query = "INSERT INTO hotel_ratings (uname, hotel_id, rating) VALUES ('$username', '$hotel_id', '$rating')";
-        $conn->query($insert_query);
-        echo json_encode(["status" => "success", "message" => "Thank you for rating!"]);
-    }
-    exit;
-}
+// Fetch hotels from the database
+$sql = "SELECT * FROM hotels ORDER BY RAND() LIMIT 3"; // Fetch 3 random hotels for recommendations
+$result = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Hotels - CandonXplore</title>
+    <title>Hotels - CandonXplore</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
-        .hotel-item {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .btn-warning {
-            color: #fff;
-        }
-        .stars {
-            color: #f39c12;
-            font-size: 1.2em;
-        }
-        footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            margin-top: 40px;
-            font-size: 14px;
-        }
-    </style>
+    /* General card styling */
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Image adjustments */
+    .card-img-top {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    /* Card body layout */
+    .card-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    /* Contact details */
+    .hotel-contact {
+        font-size: 0.85rem;
+        color: #777;
+        margin-top: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    /* Amenities */
+    .amenities {
+        font-size: 0.9rem;
+        color: #444;
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    /* Location text */
+    .location {
+        font-size: 0.9rem;
+        color: #007bff;
+        font-weight: 600;
+    }
+
+    /* Nearby places */
+    .nearby {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+        margin-top: 5px;
+    }
+</style>
+
+    
 </head>
 <body>
-<nav class="navbar bg-body-tertiary fixed-top">
+    <!-- Navigation Bar -->
+    <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-            <img src="/project-study/uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
+                <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
                 <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CandonXplore</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <h5 class="offcanvas-title">CandonXplore</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/project-study/home/index.php">Home</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Attractions
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
-                                <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/historical-landsites.php">Historical Landsites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php">Recreational Facilities</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php">Livelihoods</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/ancestral-houses.php">Ancestral Houses</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/experience.php">Experience</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="../hotels/hotels.php">Hotels</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="restaurants.php">Restaurants</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="../events/events.php">Events</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../attractions/pages/historical-tourist-sites.php">Attractions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="hotels.php">Hotels</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../resto/restaurants.php">Restaurants</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/project-study/events/events.php">Events</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/project-study/profile/login.php">Profile</a></li>
                     </ul>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
         <div class="hero-content">
             <h1>Hotels</h1>
-            <p>Discover the best hotels in Candon City.</p>
+            <p>Find the best hotels in Candon City.</p>
         </div>
     </div>
 
-<div class="container mt-5">
-    <h2>Hotels</h2>
-    <div class="row">
-        <?php
-        $sql = "SELECT h.*, 
-                (SELECT AVG(rating) FROM hotel_ratings WHERE hotel_id = h.id) AS avg_rating,
-                (SELECT rating FROM hotel_ratings WHERE hotel_id = h.id AND uname = '$username' LIMIT 1) AS user_rating 
-                FROM hotels h";
+    <!-- Hotels & Recommendations Section -->
+    <main>
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Hotel Listings (75% on desktop, 100% on mobile) -->
+                <div class="col-12 col-md-9">
+                    <section class="section">
+                        <div class="row">
+                            <?php
+                            $hotelQuery = "SELECT * FROM hotels"; 
+                            $hotelResult = $conn->query($hotelQuery);
 
-        $result = $conn->query($sql);
+                            if ($hotelResult->num_rows > 0) {
+                                while ($row = $hotelResult->fetch_assoc()) {
+                                    // Ensure image is properly encoded
+                                    $imageSrc = (!empty($row['img'])) 
+                                        ? "data:image/jpeg;base64," . base64_encode($row['img'])
+                                        : "/project-study/uploads/default-hotel.jpg"; // Default image
+                                    ?>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card">
+                                            <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="Hotel Image">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><i class="bi bi-building"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
+                                                <p class="card-text"><i class="bi bi-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
+                                                <p><i class="bi bi-geo-alt"></i> <strong>Location:</strong> <?php echo htmlspecialchars($row['location']); ?></p>
+                                                <p><i class="bi bi-telephone"></i> <strong>Contact:</strong> <?php echo htmlspecialchars($row['contact_number']); ?> | <i class="bi bi-envelope"></i> <?php echo htmlspecialchars($row['email']); ?></p>
+                                                <p><i class="bi bi-door-open"></i> <strong>Rooms Available:</strong> <?php echo $row['rooms']; ?></p>
+                                                <p><i class="bi bi-tags"></i> <strong>Type:</strong> <?php echo htmlspecialchars($row['type']); ?></p>
+                                                <p><i class="bi bi-map"></i> <strong>Nearby Places:</strong> <?php echo htmlspecialchars($row['nearby_places']); ?></p>
+                                                <p><i class="bi bi-tools"></i> <strong>Amenities/Facilities:</strong> <?php echo htmlspecialchars($row['amenities_facilities']); ?></p>
+                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="bi bi-compass"></i> Get Directions</a>
+                                                <button class="btn btn-secondary view-more-btn" data-hotel-id="<?php echo $row['id']; ?>"><i class="bi bi-eye"></i> View More</button>
+                                                <button class="btn btn-warning rate-btn" data-hotel-id="<?php echo $row['id']; ?>"><i class="bi bi-star"></i> Rate</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            } else {
+                                echo "<p>No hotels found.</p>";
+                            }
+                            ?>
+                        </div>
+                    </section>
+                </div>
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $avg_rating = round($row['avg_rating'], 1);
-                $user_rating = $row['user_rating'] ? $row['user_rating'] : "Not Rated";
-                echo '<div class="col-md-4">';
-                echo '<div class="hotel-item">';
-                echo '<h4>' . $row['title'] . '</h4>';
-                echo '<p><strong>Average Rating:</strong> ' . displayStars($avg_rating) . ' (' . $avg_rating . '/5)</p>';
-                echo '<p><strong>Your Rating:</strong> ' . ($user_rating !== "Not Rated" ? displayStars($user_rating) : $user_rating) . '</p>';
-                echo '<p>' . $row['description'] . '</p>';
-                echo '<a href="https://www.google.com/maps/dir/?api=1&destination=' . $row['latitude'] . ',' . $row['longitude'] . '" target="_blank" class="btn btn-primary me-2">Get Directions</a>';
-                echo '<a href="hotel-details.php?id=' . $row['id'] . '" class="btn btn-secondary me-2">View More</a>';
-                echo '<button class="btn btn-warning" onclick="openRatingModal(' . $row['id'] . ', ' . ($user_rating !== "Not Rated" ? $user_rating : "0") . ')">Rate</button>';
-                echo '</div>';
-                echo '</div>';
-            }
-        } else {
-            echo '<p>No hotels found.</p>';
-        }
-
-        function displayStars($rating) {
-            $fullStars = floor($rating);
-            $halfStar = ($rating - $fullStars) >= 0.5 ? '★' : '';
-            return str_repeat('★', $fullStars) . $halfStar . str_repeat('☆', 5 - $fullStars - ($halfStar ? 1 : 0));
-        }
-        ?>
-    </div>
-</div>
-
-<!-- Rating Modal -->
-<div class="modal fade" id="ratingModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Rate This Hotel</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <?php if ($user_logged_in): ?>
-                    <form id="ratingForm">
-                        <input type="hidden" id="hotel_id" name="hotel_id">
-                        <label for="rating">Select Rating:</label>
-                        <select class="form-control" id="rating" name="rating" required>
-                            <option value="1">1 Star</option>
-                            <option value="2">2 Stars</option>
-                            <option value="3">3 Stars</option>
-                            <option value="4">4 Stars</option>
-                            <option value="5">5 Stars</option>
-                        </select>
-                        <button type="submit" class="btn btn-success mt-3">Submit Rating</button>
-                    </form>
-                <?php else: ?>
-                    <p>You must <a href="register.php">create an account</a> or <a href="login.php">log in</a> to rate this hotel.</p>
-                <?php endif; ?>
+                <!-- Recommendations (25% on desktop, 100% on mobile) -->
+                <div class="col-12 col-md-3 mt-4 mt-md-0">
+                    <div class="recommendation-section">
+                        <h4>Recommended Hotels</h4>
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($recRow = $result->fetch_assoc()) {
+                                // Ensure image is properly encoded
+                                $recImageSrc = (!empty($recRow['img'])) 
+                                    ? "data:image/jpeg;base64," . base64_encode($recRow['img'])
+                                    : "/project-study/uploads/default-hotel.jpg"; // Default image
+                                ?>
+                                <div class="recommendation-card">
+                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid" alt="Recommended Hotel Image">
+                                    <h6><?php echo htmlspecialchars($recRow['title']); ?></h6>
+                                    <p><?php echo htmlspecialchars($recRow['location']); ?></p>
+                                    <a href="https://www.google.com/maps?q=<?php echo $recRow['latitude']; ?>,<?php echo $recRow['longitude']; ?>" target="_blank" class="btn btn-sm btn-primary">View</a>
+                                </div>
+                                <hr>
+                                <?php
+                            }
+                        } else {
+                            echo "<p>No recommendations available.</p>";
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </main>
 
-<footer>
-    <p>REPUBLIC OF THE PHILIPPINES</p>
-    <p>All content is in the public domain unless otherwise stated.</p>
-    <p><a href="#">Privacy Policy</a></p>
-    <p>ABOUT GOVPH</p>
-    <p>Learn more about the Philippine government, its structure, how government works and the people behind it.</p>
-    <p><a href="#">Official Gazette</a> | <a href="#">Open Data Portal</a> | <a href="#">Send us your feedback</a></p>
-    <p>GOVERNMENT LINKS</p>
-    <p><a href="#">Office of the President</a> | <a href="#">Office of the Vice President</a> | <a href="#">Senate of the Philippines</a> | <a href="#">House of Representatives</a> | <a href="#">Supreme Court</a> | <a href="#">Court of Appeals</a> | <a href="#">Sandiganbayan</a></p>
-</footer>
+    <!-- Footer -->
+    <footer>
+        <p>REPUBLIC OF THE PHILIPPINES</p>
+        <p>All content is in the public domain unless otherwise stated.</p>
+        <p><a href="#">Privacy Policy</a></p>
+        <p>ABOUT GOVPH</p>
+        <p>Learn more about the Philippine government, its structure, how government works, and the people behind it.</p>
+        <p><a href="#">Official Gazette</a> | <a href="#">Open Data Portal</a> | <a href="#">Send us your feedback</a></p>
+    </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
+    <script src="hotels.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Add functionality for "View More" button
+    document.querySelectorAll('.view-more-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const hotelId = this.getAttribute('data-hotel-id');
+            // Fetch and display all details for the selected hotel
+            alert('Displaying more details for hotel ID: ' + hotelId);
+            // You can replace this alert with a modal or a new page to show full details
+        });
+    });
+
+    // Add functionality for "Rate" button
+    document.querySelectorAll('.rate-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const hotelId = this.getAttribute('data-hotel-id');
+            // Handle rating logic here
+            alert('Rate button clicked for hotel ID: ' + hotelId);
+            // Replace this alert with a modal or form to submit ratings
+        });
+    });
+    </script>
 </body>
 </html>
+
+<?php
+$conn->close();
+?>

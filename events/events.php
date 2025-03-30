@@ -88,9 +88,63 @@ if (!$db_selected) {
         <section class="section">
             <h2>Upcoming Events</h2>
             <div class="content">
-                <!-- Content goes here -->
+                <?php
+                $query = "SELECT * FROM events"; // Assuming you have an 'events' table
+                $result = $conn->query($query);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<div class="event-item d-flex align-items-center mb-4 p-3" style="border: 1px solid #ddd; border-radius: 8px; transition: transform 0.3s; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">';
+                        echo '<img src="/project-study/uploads/events/' . $row['img'] . '" alt="' . $row['title'] . '" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; margin-right: 20px;">';
+                        echo '<div class="event-details">';
+                        echo '<h3 style="margin-bottom: 10px;">' . $row['title'] . '</h3>';
+                        echo '<p style="margin-bottom: 10px;">' . $row['description'] . '</p>';
+                        echo '<p style="margin-bottom: 10px; font-size: 0.9em; color: #555;">Date: ' . $row['event_date'] . '</p>';
+                        echo '<div class="buttons">';
+                        echo '<a href="event-details.php?id=' . $row['id'] . '" class="btn btn-primary me-2">View More</a>';
+                        echo '<a href="https://www.google.com/maps/search/?api=1&query=' . $row['latitude'] . ',' . $row['longitude'] . '" target="_blank" class="btn btn-secondary me-2">Get Directions</a>';
+                        echo '<button class="btn btn-warning rate-btn" data-event-id="' . $row['id'] . '">Rate</button>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                    }
+                } else {
+                    echo '<p>No events found.</p>';
+                }
+                ?>
             </div>
         </section>
+
+        <script>
+            document.querySelectorAll('.rate-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+                    if (!isLoggedIn) {
+                        alert('Please log in to rate this event.');
+                        window.location.href = '/project-study/auth/auth.php';
+                    } else {
+                        const eventId = this.getAttribute('data-event-id');
+                        // Redirect to rating page or handle rating logic
+                        window.location.href = `/project-study/rate.php?id=${eventId}`;
+                    }
+                });
+            });
+        </script>
+
+        <style>
+            .event-item:hover {
+                transform: scale(1.02);
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            }
+
+            .btn {
+                transition: background-color 0.3s, transform 0.3s;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+            }
+        </style>
     </main>
     <footer>
         <p>REPUBLIC OF THE PHILIPPINES</p>

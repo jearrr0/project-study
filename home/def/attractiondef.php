@@ -40,9 +40,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Add New Attraction</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .back-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: #ff9800;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .back-button:hover {
+            background: #e68900;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
+        <a href="superadminpanel.php" class="back-button">Back to Panel</a>
         <h1>Add New Attraction</h1>
         <form method="POST" enctype="multipart/form-data">
             <div class="mb-3">

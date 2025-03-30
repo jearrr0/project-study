@@ -107,10 +107,24 @@ $conn->close();
             background: #e68900;
             transform: scale(1.05);
         }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: #ff9800;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .back-button:hover {
+            background: #e68900;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="superadminpanel.php" class="back-button">Back to Panel</a>
         <h2>Add a Historical Site</h2>
         <form method="POST" enctype="multipart/form-data">
             <input type="text" name="title" placeholder="Historical Site Name" required>
