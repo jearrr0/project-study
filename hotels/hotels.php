@@ -13,7 +13,11 @@ if ($conn->connect_error) {
 }
 
 // Fetch hotels from the database
-$sql = "SELECT * FROM hotels ORDER BY RAND() LIMIT 3"; // Fetch 3 random hotels for recommendations
+$sql = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating 
+        FROM hotels 
+        LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+        GROUP BY hotels.id 
+        ORDER BY RAND() LIMIT 3"; // Fetch 3 random hotels with average ratings for recommendations
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -24,7 +28,7 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome -->
 
     <style>
     /* General card styling */
@@ -106,6 +110,103 @@ $result = $conn->query($sql);
         font-style: italic;
         margin-top: 5px;
     }
+
+    /* Recommended hotels carousel styling */
+    .recommendation-section {
+        text-align: center;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .recommendation-card img {
+        max-height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .recommendation-card h6 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .recommendation-card p {
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    .recommendation-card .btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+
+    /* Where to Stay Section Styling */
+    .where-to-stay {
+        text-align: center;
+        margin-top: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #007bff, #00c6ff);
+        color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .where-to-stay:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .where-to-stay h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .where-to-stay p {
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    /* Add colors to icons */
+    .card-body i {
+        color: #007bff; /* Primary color for icons */
+    }
+
+    .recommendation-card i {
+        color: #ff9800; /* Orange for recommendation icons */
+    }
+
+    /* Button colors */
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+    }
 </style>
 
     
@@ -148,16 +249,78 @@ $result = $conn->query($sql);
         </div>
     </div>
 
+    <!-- Where to Stay Section (Top) -->
+    <div class="container-fluid mt-4">
+        <div class="where-to-stay">
+            <h2>Affordable Stays in Candon City</h2>
+            <p>Explore budget-friendly hotels and enjoy your stay without breaking the bank.</p>
+        </div>
+    </div>
+
+    <!-- Recommendations (Carousel) -->
+    <div class="container-fluid mt-4">
+        <div class="recommendation-section">
+            <h4>Recommended Hotels</h4>
+            <div id="recommendedHotelsCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <?php
+                    if ($result->num_rows > 0) {
+                        $active = true;
+                        while ($recRow = $result->fetch_assoc()) {
+                            // Ensure image is properly encoded
+                            $recImageSrc = (!empty($recRow['img'])) 
+                                ? "data:image/jpeg;base64," . base64_encode($recRow['img'])
+                                : "/project-study/uploads/default-hotel.jpg"; // Default image
+                            ?>
+                            <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+                                <div class="recommendation-card text-center">
+                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid" alt="Recommended Hotel Image">
+                                    <h6><?php echo htmlspecialchars($recRow['title']); ?></h6>
+                                    <p><?php echo htmlspecialchars($recRow['location']); ?></p>
+                                    <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($recRow['avg_rating'], 1); ?> / 5</p>
+                                    <a href="hotel-details.php?id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-primary"><i class="fas fa-map-marker-alt"></i> View</a>
+                                    <a href="/project-study/rate.php?resto_id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-warning"><i class="fas fa-star"></i> Rate</a>
+                                </div>
+                            </div>
+                            <?php
+                            $active = false;
+                        }
+                    } else {
+                        echo "<p>No recommendations available.</p>";
+                    }
+                    ?>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#recommendedHotelsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#recommendedHotelsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Where to Stay Section (Bottom) -->
+        <div class="where-to-stay">
+            <h2>Where to Stay in Candon City</h2>
+            <p>Discover the best accommodations and enjoy your stay in the heart of Candon City.</p>
+        </div>
+    </div>
+
     <!-- Hotels & Recommendations Section -->
     <main>
         <div class="container mt-4">
-            <div class="row">
-                <!-- Hotel Listings (75% on desktop, 100% on mobile) -->
+            <div class="row justify-content-center">
+                <!-- Hotel Listings (Centered, Two per Row) -->
                 <div class="col-12 col-md-9">
                     <section class="section">
-                        <div class="row">
+                        <div class="row justify-content-center">
                             <?php
-                            $hotelQuery = "SELECT * FROM hotels"; 
+                            $hotelQuery = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating 
+                                           FROM hotels 
+                                           LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+                                           GROUP BY hotels.id"; // Fetch all hotels with average ratings
                             $hotelResult = $conn->query($hotelQuery);
 
                             if ($hotelResult->num_rows > 0) {
@@ -171,17 +334,18 @@ $result = $conn->query($sql);
                                         <div class="card">
                                             <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="Hotel Image">
                                             <div class="card-body">
-                                                <h5 class="card-title"><i class="bi bi-building"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
-                                                <p class="card-text"><i class="bi bi-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
-                                                <p><i class="bi bi-geo-alt"></i> <strong>Location:</strong> <?php echo htmlspecialchars($row['location']); ?></p>
-                                                <p><i class="bi bi-telephone"></i> <strong>Contact:</strong> <?php echo htmlspecialchars($row['contact_number']); ?> | <i class="bi bi-envelope"></i> <?php echo htmlspecialchars($row['email']); ?></p>
-                                                <p><i class="bi bi-door-open"></i> <strong>Rooms Available:</strong> <?php echo $row['rooms']; ?></p>
-                                                <p><i class="bi bi-tags"></i> <strong>Type:</strong> <?php echo htmlspecialchars($row['type']); ?></p>
-                                                <p><i class="bi bi-map"></i> <strong>Nearby Places:</strong> <?php echo htmlspecialchars($row['nearby_places']); ?></p>
-                                                <p><i class="bi bi-tools"></i> <strong>Amenities/Facilities:</strong> <?php echo htmlspecialchars($row['amenities_facilities']); ?></p>
-                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="bi bi-compass"></i> Get Directions</a>
-                                                <button class="btn btn-secondary view-more-btn" data-hotel-id="<?php echo $row['id']; ?>"><i class="bi bi-eye"></i> View More</button>
-                                                <button class="btn btn-warning rate-btn" data-hotel-id="<?php echo $row['id']; ?>"><i class="bi bi-star"></i> Rate</button>
+                                                <h5 class="card-title"><i class="fas fa-hotel"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
+                                                <p class="card-text"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
+                                                <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <?php echo htmlspecialchars($row['location']); ?></p>
+                                                <p><i class="fas fa-phone"></i> <strong>Contact:</strong> <?php echo htmlspecialchars($row['contact_number']); ?> | <i class="fas fa-envelope"></i> <?php echo htmlspecialchars($row['email']); ?></p>
+                                                <p><i class="fas fa-door-open"></i> <strong>Rooms Available:</strong> <?php echo $row['rooms']; ?></p>
+                                                <p><i class="fas fa-tags"></i> <strong>Type:</strong> <?php echo htmlspecialchars($row['type']); ?></p>
+                                                <p><i class="fas fa-map"></i> <strong>Nearby Places:</strong> <?php echo htmlspecialchars($row['nearby_places']); ?></p>
+                                                <p><i class="fas fa-concierge-bell"></i> <strong>Amenities/Facilities:</strong> <?php echo htmlspecialchars($row['amenities_facilities']); ?></p>
+                                                <p><i class="fas fa-star" style="color: #ffc107;"></i> <strong>Average Rating:</strong> <?php echo number_format($row['avg_rating'], 1); ?> / 5</p>
+                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-compass"></i> Get Directions</a>
+                                                <button class="btn btn-secondary view-more-btn" data-hotel-id="<?php echo $row['id']; ?>"><i class="fas fa-eye"></i> View More</button>
+                                                <a href="/project-study/hotel_ratings.php?hotel_id=<?php echo $row['id']; ?>" class="btn btn-warning"><i class="fas fa-star"></i> Rate</a>
                                             </div>
                                         </div>
                                     </div>
@@ -194,37 +358,11 @@ $result = $conn->query($sql);
                         </div>
                     </section>
                 </div>
-
-                <!-- Recommendations (25% on desktop, 100% on mobile) -->
-                <div class="col-12 col-md-3 mt-4 mt-md-0">
-                    <div class="recommendation-section">
-                        <h4>Recommended Hotels</h4>
-                        <?php
-                        if ($result->num_rows > 0) {
-                            while ($recRow = $result->fetch_assoc()) {
-                                // Ensure image is properly encoded
-                                $recImageSrc = (!empty($recRow['img'])) 
-                                    ? "data:image/jpeg;base64," . base64_encode($recRow['img'])
-                                    : "/project-study/uploads/default-hotel.jpg"; // Default image
-                                ?>
-                                <div class="recommendation-card">
-                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid" alt="Recommended Hotel Image">
-                                    <h6><?php echo htmlspecialchars($recRow['title']); ?></h6>
-                                    <p><?php echo htmlspecialchars($recRow['location']); ?></p>
-                                    <a href="https://www.google.com/maps?q=<?php echo $recRow['latitude']; ?>,<?php echo $recRow['longitude']; ?>" target="_blank" class="btn btn-sm btn-primary">View</a>
-                                </div>
-                                <hr>
-                                <?php
-                            }
-                        } else {
-                            echo "<p>No recommendations available.</p>";
-                        }
-                        ?>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
+
+    
 
     <!-- Footer -->
     <footer>
@@ -250,14 +388,18 @@ $result = $conn->query($sql);
         });
     });
 
-    // Add functionality for "Rate" button
-    document.querySelectorAll('.rate-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const hotelId = this.getAttribute('data-hotel-id');
-            // Handle rating logic here
-            alert('Rate button clicked for hotel ID: ' + hotelId);
-            // Replace this alert with a modal or form to submit ratings
-        });
+
+
+    // Handle form submission for rating
+    document.getElementById('rateHotelForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('submit-rating.php', {
+            method: 'POST',
+            body: formData
+        })
+  
     });
     </script>
 </body>

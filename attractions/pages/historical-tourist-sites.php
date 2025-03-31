@@ -5,137 +5,311 @@ $password = "";
 $dbname = "candonxplore_db";
 
 // Create connection
-$conn = new mysqli($servername, $username, $password);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if database exists
-$db_selected = mysqli_select_db($conn, $dbname);
-if (!$db_selected) {
-    die("Database selection failed: " . mysqli_error($conn));
-}
+// Fetch historical tourist sites from the database
+$siteQuery = "SELECT id, title, description, img, latitude, longitude, location FROM historical_tourist_sites ORDER BY title ASC"; // Updated table
+$siteResult = $conn->query($siteQuery);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Historical Tourist Sites - CandonXplore</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="historical-tourist-sites.css">
+    <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome -->
+
+    <style>
+    /* General card styling */
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Image adjustments */
+    .card-img-top {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    /* Card body layout */
+    .card-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    /* Contact details */
+    .hotel-contact {
+        font-size: 0.85rem;
+        color: #777;
+        margin-top: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    /* Amenities */
+    .amenities {
+        font-size: 0.9rem;
+        color: #444;
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    /* Location text */
+    .location {
+        font-size: 0.9rem;
+        color: #007bff;
+        font-weight: 600;
+    }
+
+    /* Nearby places */
+    .nearby {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+        margin-top: 5px;
+    }
+
+    /* Recommended events carousel styling */
+    .recommendation-section {
+        text-align: center;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .recommendation-card img {
+        max-height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .recommendation-card h6 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .recommendation-card p {
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    .recommendation-card .btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+
+    /* Where to Stay Section Styling */
+    .where-to-stay {
+        text-align: center;
+        margin-top: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #007bff, #00c6ff);
+        color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .where-to-stay:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .where-to-stay h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .where-to-stay p {
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    /* Add colors to icons */
+    .card-body i {
+        color: #007bff; /* Primary color for icons */
+    }
+
+    .recommendation-card i {
+        color: #ff9800; /* Orange for recommendation icons */
+    }
+
+    /* Button colors */
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+    }
+</style>
+
+    
 </head>
 <body>
-    <nav class="navbar bg-body-tertiary fixed-top">
+    <!-- Navigation Bar -->
+    <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="../../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
+                <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
                 <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CandonXplore</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <h5 class="offcanvas-title">CandonXplore</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item"><a class="nav-link active" href="../../home/index.php">Home</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown">Attractions</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="historical-tourist-sites.php">Historical Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="historical-landsites.php">Historical Landsites</a></li>
-                                <li><a class="dropdown-item" href="recreational-facilities.php">Recreational Facilities</a></li>
-                                <li><a class="dropdown-item" href="livelihoods.php">Livelihoods</a></li>
-                                <li><a class="dropdown-item" href="ancestral-houses.php">Ancestral Houses</a></li>
-                                <li><a class="dropdown-item" href="experience.php">Experience</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" href="../../hotels">Hotels</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../../resto">Restaurants</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../../events">Events</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../attractions/pages/historical-tourist-sites.php">Attractions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="hotels.php">Hotels</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../resto/restaurants.php">Restaurants</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/project-study/events/events.php">Events</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/project-study/profile/login.php">Profile</a></li>
                     </ul>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="hero" style="background-image: url('../../uploads/home/image-2-1024x724.jpg');">
+    <!-- Hero Section -->
+    <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
         <div class="hero-content">
-            <h1>Historical Tourist Sites</h1>
-            <p>Discover the historical tourist sites of Candon City.</p>
+            <h1>Explore Historical Sites</h1>
+            <p>Discover the rich history and culture of Candon City! 🏛️📜</p>
         </div>
     </div>
 
-    <main>
-    <section class="section">
-    <h2>Historical Tourist Sites</h2>
-    <div class="content">
-        <?php
-        $sql = "SELECT * FROM historical_tourist_sites";
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo '<div class="tourist-site-item d-flex mb-4 p-3">';
-                echo '<div id="carousel-' . $row['id'] . '" class="carousel slide me-4" data-bs-ride="carousel" style="width: 300px;">';
-                echo '<div class="carousel-inner">';
-
-                // Convert BLOB images to base64
-                $images = [];
-                if (!empty($row['img']))  $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img']);
-                if (!empty($row['img1'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img1']);
-                if (!empty($row['img2'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img2']);
-                if (!empty($row['img3'])) $images[] = 'data:image/jpeg;base64,' . base64_encode($row['img3']);
-
-                // Loop through images and add to carousel
-                foreach ($images as $index => $image) {
-                    echo '<div class="carousel-item ' . ($index === 0 ? 'active' : '') . '">';
-                    echo '<img src="' . $image . '" class="d-block w-100" alt="Tourist Site Image">';
-                    echo '</div>';
-                }
-
-                echo '</div>';
-                echo '<button class="carousel-control-prev" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="prev">';
-                echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-                echo '<span class="visually-hidden">Previous</span>';
-                echo '</button>';
-                echo '<button class="carousel-control-next" type="button" data-bs-target="#carousel-' . $row['id'] . '" data-bs-slide="next">';
-                echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-                echo '<span class="visually-hidden">Next</span>';
-                echo '</button>';
-                echo '</div>';
-                echo '<div>';
-                echo '<h3 class="mb-3">' . $row['title'] . '</h3>';
-                echo '<p class="text-muted">' . $row['description'] . '</p>';
-                echo '<p><strong>Location:</strong> <a href="https://www.google.com/maps/search/?api=1&query=' . $row['latitude'] . ',' . $row['longitude'] . '" target="_blank">View on Map</a></p>';
-                echo '<a href="historical-site-details.php?id=' . $row['id'] . '" class="btn btn-secondary">View More</a>';
-                echo '</div>';
-                echo '</div>';
-            }
-        } else {
-            echo '<p>No historical sites found.</p>';
-        }
-        ?>
+    <!-- Where to Stay Section (Top) -->
+    <div class="container-fluid mt-4">
+        <div class="where-to-stay">
+            <h2>Historical Tourist Sites in Candon City</h2>
+            <p>Explore the landmarks that define the city's heritage.</p>
+        </div>
     </div>
-</section>
 
+    <!-- Historical Sites Section -->
+    <main>
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <!-- Single Column Site Display -->
+                <div class="col-12 col-md-9">
+                    <section class="section">
+                        <div class="row">
+                            <?php
+                            if ($siteResult->num_rows > 0) {
+                                while ($row = $siteResult->fetch_assoc()) {
+                                    $imageSrc = (!empty($row['img'])) 
+                                        ? "data:image/jpeg;base64," . base64_encode($row['img'])
+                                        : "/project-study/uploads/default-site.jpg"; // Default image
+                                    $location = !empty($row['location']) ? htmlspecialchars($row['location']) : "Location not specified"; // Fallback for missing location
+                                    ?>
+                                    <div class="col-12 mb-4">
+                                        <div class="card">
+                                            <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="Site Image">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><i class="fas fa-landmark"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
+                                                <p class="card-text"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
+                                                <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <?php echo $location; ?></p>
+                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-compass"></i> Get Directions</a>
+                                                <a href="site-details.php?id=<?php echo $row['id']; ?>" class="btn btn-secondary mt-2"><i class="fas fa-info-circle"></i> View More</a> <!-- View More Button -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            } else {
+                                echo "<p>No historical sites found.</p>";
+                            }
+                            ?>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
     </main>
 
+    <!-- Footer -->
     <footer>
-        <p>REPUBLIC OF THE PHILIPPINES | All content is in the public domain unless otherwise stated.</p>
+        <p>REPUBLIC OF THE PHILIPPINES</p>
+        <p>All content is in the public domain unless otherwise stated.</p>
+        <p><a href="#">Privacy Policy</a></p>
+        <p>ABOUT GOVPH</p>
+        <p>Learn more about the Philippine government, its structure, how government works, and the people behind it.</p>
+        <p><a href="#">Official Gazette</a> | <a href="#">Open Data Portal</a> | <a href="#">Send us your feedback</a></p>
     </footer>
 
-    <script src="../../home/index.js"></script>
+    <!-- Scripts -->
+    <script src="historical-sites.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<?php
+$conn->close();
+?>

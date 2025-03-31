@@ -12,30 +12,30 @@ if ($conn->connect_error) {
 }
 
 $uname = $_SESSION['user']['uname'] ?? null;
-$resto_id = $_GET['resto_id'] ?? null; // Get resto_id from URL
+$hotel_id = $_GET['hotel_id'] ?? null; // Get hotel_id from URL
 
-if (!$uname || !$resto_id) {
-    die("Invalid user or restaurant ID."); // Ensure both uname and resto_id are provided
+if (!$uname || !$hotel_id) {
+    die("Invalid user or hotel ID."); // Ensure both uname and hotel_id are provided
 }
 
-// Fetch restaurant name for display
-$resto_name = "Our Restaurant"; // Default name
-$stmt = $conn->prepare("SELECT title FROM resto WHERE id = ?"); // Updated table and column name
+// Fetch hotel name for display
+$hotel_name = "Our Hotel"; // Default name
+$stmt = $conn->prepare("SELECT title FROM hotels WHERE id = ?"); // Updated column name to 'title'
 if ($stmt) {
-    $stmt->bind_param("i", $resto_id);
+    $stmt->bind_param("i", $hotel_id);
     $stmt->execute();
     $stmt->bind_result($fetched_name);
     if ($stmt->fetch()) {
-        $resto_name = $fetched_name;
+        $hotel_name = $fetched_name;
     }
     $stmt->close();
 }
 
-// Fetch user's existing rating for the restaurant
+// Fetch user's existing rating for the hotel
 $user_rating = 0; // Default to no rating
-$stmt = $conn->prepare("SELECT rating FROM resto_ratings WHERE uname = ? AND resto_id = ?");
+$stmt = $conn->prepare("SELECT rating FROM hotel_ratings WHERE uname = ? AND hotel_id = ?");
 if ($stmt) {
-    $stmt->bind_param("si", $uname, $resto_id);
+    $stmt->bind_param("si", $uname, $hotel_id);
     $stmt->execute();
     $stmt->bind_result($existing_rating);
     if ($stmt->fetch()) {
@@ -52,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         if ($user_rating > 0) {
             // Update existing rating
-            $stmt = $conn->prepare("UPDATE resto_ratings SET rating = ? WHERE uname = ? AND resto_id = ?");
+            $stmt = $conn->prepare("UPDATE hotel_ratings SET rating = ? WHERE uname = ? AND hotel_id = ?");
             if ($stmt) {
-                $stmt->bind_param("isi", $rating, $uname, $resto_id);
+                $stmt->bind_param("isi", $rating, $uname, $hotel_id);
                 if ($stmt->execute()) {
                     echo "<script>alert('Your rating has been updated!');</script>";
                     $user_rating = $rating; // Update the displayed rating
@@ -68,9 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // Insert new rating
-            $stmt = $conn->prepare("INSERT INTO resto_ratings (uname, resto_id, rating) VALUES (?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO hotel_ratings (uname, hotel_id, rating) VALUES (?, ?, ?)");
             if ($stmt) {
-                $stmt->bind_param("sii", $uname, $resto_id, $rating);
+                $stmt->bind_param("sii", $uname, $hotel_id, $rating);
                 if ($stmt->execute()) {
                     echo "<script>alert('Thank you for your feedback!');</script>";
                     $user_rating = $rating; // Update the displayed rating
@@ -94,7 +94,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rate <?php echo htmlspecialchars($resto_name); ?></title>
+    <title>Rate <?php echo htmlspecialchars($hotel_name); ?></title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -191,7 +191,7 @@ $conn->close();
 <body>
     <div class="container">
         <h1>Welcome, <?php echo htmlspecialchars($uname); ?>!</h1>
-        <p>Rate <?php echo htmlspecialchars($resto_name); ?>:</p>
+        <p>Rate <?php echo htmlspecialchars($hotel_name); ?>:</p>
         <?php if ($user_rating > 0): ?>
             <p>Your current rating: <?php echo $user_rating; ?> stars</p>
         <?php endif; ?>

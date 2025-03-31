@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
+    // Fetch user data
     $query = $conn->prepare("SELECT * FROM users WHERE uname=?");
     $query->bind_param("s", $username);
     $query->execute();
@@ -20,7 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userData = $result->fetch_assoc();
 
     if ($userData && password_verify($password, $userData['pword'])) {
-        $_SESSION['user'] = ['uname' => $userData['uname']];
+        $_SESSION['user'] = [
+            'uname' => $userData['uname'],
+            'name' => $userData['name'],
+            'contact' => $userData['contact'],
+            'address' => $userData['address']
+        ];
         header("Location: profile.php"); // Redirect to profile after login
         exit();
     } else {
