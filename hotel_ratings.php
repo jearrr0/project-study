@@ -20,7 +20,7 @@ if (!$uname || !$hotel_id) {
 
 // Fetch hotel name for display
 $hotel_name = "Our Hotel"; // Default name
-$stmt = $conn->prepare("SELECT title FROM hotels WHERE id = ?"); // Updated column name to 'title'
+$stmt = $conn->prepare("SELECT title FROM hotels WHERE id = ?"); // Updated table and column name
 if ($stmt) {
     $stmt->bind_param("i", $hotel_id);
     $stmt->execute();

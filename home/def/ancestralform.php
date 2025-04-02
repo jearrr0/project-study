@@ -15,6 +15,7 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];
     $description = $_POST['description'];
+    $location = $_POST['location'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
 
@@ -24,15 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $img = getImageData("img");
-    $img1 = getImageData("img1");
-    $img2 = getImageData("img2");
-    $img3 = getImageData("img3");
 
-    $sql = "INSERT INTO ancestral_houses (title, description, img, img1, img2, img3, latitude, longitude) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    // SQL query to insert into 'ancestral_house' table
+    $sql = "INSERT INTO ancestral_house (title, description, location, img, latitude, longitude) 
+            VALUES (?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssbbbbdd", $title, $description, $img, $img1, $img2, $img3, $latitude, $longitude);
+    $stmt->send_long_data(3, $img); // Send binary data for the 'img' column
+    $stmt->bind_param("sssbdd", $title, $description, $location, $img, $latitude, $longitude);
 
     if ($stmt->execute()) {
         echo "<script>alert('Ancestral house successfully added!');</script>";
@@ -125,10 +125,8 @@ $conn->close();
         <form method="POST" enctype="multipart/form-data">
             <input type="text" name="title" placeholder="Ancestral House Name" required>
             <textarea name="description" placeholder="Description" required></textarea>
+            <input type="text" name="location" placeholder="Location" required>
             <input type="file" name="img" accept="image/*" required>
-            <input type="file" name="img1" accept="image/*">
-            <input type="file" name="img2" accept="image/*">
-            <input type="file" name="img3" accept="image/*">
             <input type="text" name="latitude" placeholder="Latitude" required>
             <input type="text" name="longitude" placeholder="Longitude" required>
             <button type="submit">Add Ancestral House</button>

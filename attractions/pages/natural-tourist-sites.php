@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch historical tourist sites from the database
-$siteQuery = "SELECT id, title, description, img, latitude, longitude, location FROM historical_tourist_sites ORDER BY title ASC"; // Updated table
+$siteQuery = "SELECT id, title, description, img, latitude, longitude, location FROM histo ORDER BY title ASC"; // Updated table
 $siteResult = $conn->query($siteQuery);
 ?>
 <!DOCTYPE html>
@@ -208,34 +208,61 @@ $siteResult = $conn->query($siteQuery);
     
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
-                <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title">CandonXplore</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../attractions/pages/historical-tourist-sites.php">Attractions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="hotels.php">Hotels</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../resto/restaurants.php">Restaurants</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/events/events.php">Events</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/profile/login.php">Profile</a></li>
-                    </ul>
+       <!-- Existing Navigation Bar -->
+       <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                <img src="../../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
+
+                    <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CandonXplore</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Attractions
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
+                                    <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
+                                    <li><a class="dropdown-item" href="../attractions/pages/historical-landsites.php">Historical Landsites</a></li>
+                                    <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php">Recreational Facilities</a></li>
+                                    <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php">Livelihoods</a></li>
+                                    <li><a class="dropdown-item" href="../attractions/pages/ancestral-houses.php">Ancestral Houses</a></li>
+                                    <li><a class="dropdown-item" href="../attractions/pages/experience.php">Experience</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../hotels/hotels.php">Hotels</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../resto/restaurants.php">Restaurants</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/project-study/events/events.php">Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/project-study/profile/login.php">Profile</a>
+                            </li>
+                        </ul>
+                        <form class="d-flex mt-3" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
@@ -309,7 +336,7 @@ $siteResult = $conn->query($siteQuery);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
 <?php
+// Close the database connection
 $conn->close();
 ?>
