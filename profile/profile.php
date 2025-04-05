@@ -119,24 +119,56 @@ $hotelRatingsResult = $hotelRatingsQuery->get_result();
 <body>
 
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="../home/index.php">CandonXplore</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar bg-body-tertiary fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
+            <span style="font-family: 'Arial', sans-serif; font-weight: bold; font-size: 1.5rem; color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">CandonXplore</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="../home/index.php">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="profile.php">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-danger text-white px-3 ms-2" href="profile.php?logout=true">Logout</a>
-                </li>
-            </ul>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CandonXplore</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/project-study/home/index.php">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Attractions
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
+                            <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
+                            <li><a class="dropdown-item" href="../attractions/pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
+                            <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php">Recreational Facilities</a></li>
+                            <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php">Livelihoods</a></li>
+                            <li><a class="dropdown-item" href="../attractions/pages/ancestral_houses.php">Ancestral Houses</a></li>
+                            <li><a class="dropdown-item" href="../attractions/pages/experienceprogram.php">Experience Program</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/hotels/hotels.php">Hotels</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/resto/restaurants.php">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/events/events.php">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/profile/login.php">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-danger text-black px-3 ms-2" href="profile.php?logout=true" style="border: 2px solid #dc3545; border-radius: 20px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">Logout</a>
+                    </li>
+                </ul>
+                
+            </div>
         </div>
     </div>
 </nav>
@@ -203,5 +235,6 @@ $hotelRatingsResult = $hotelRatingsQuery->get_result();
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -21,7 +21,10 @@ $sql = "SELECT resto.id, resto.title, resto.type_of_resto, resto.location, resto
         GROUP BY resto.id 
         ORDER BY RAND() LIMIT 3"; // Fetch 3 random restaurants with average ratings for recommendations
 $result = $conn->query($sql);
+
+include '../includes/nav_footer.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -170,34 +173,7 @@ $result = $conn->query($sql);
     
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
-                <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title">CandonXplore</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../attractions/pages/historical-tourist-sites.php">Attractions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../hotels/hotels.php">Hotels</a></li>
-                        <li class="nav-item"><a class="nav-link" href="restaurants.php">Restaurants</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/events/events.php">Events</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/profile/login.php">Profile</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
+<?php renderNav(); ?>
 
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
@@ -284,7 +260,7 @@ $result = $conn->query($sql);
                                                 <p><i class="fas fa-concierge-bell"></i> <strong>Services:</strong> <?php echo htmlspecialchars($row['services']); ?></p>
                                                 <p><i class="fas fa-star" style="color: #ffc107;"></i> <strong>Average Rating:</strong> <?php echo number_format($row['avg_rating'], 1); ?> / 5</p>
                                                 <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-compass"></i> Get Directions</a>
-                                                <button class="btn btn-secondary view-more-btn" data-resto-id="<?php echo $row['id']; ?>"><i class="fas fa-eye"></i> View More</button>
+                                                <a href="/project-study/home/view_more_resto.php?id=<?php echo $row['id']; ?>" class="btn btn-secondary"><i class="fas fa-eye"></i> View More</a>
                                                 <a href="/project-study/rate.php?resto_id=<?php echo $row['id']; ?>" class="btn btn-warning"><i class="fas fa-star"></i> Rate</a>
                                             </div>
                                         </div>
@@ -302,16 +278,7 @@ $result = $conn->query($sql);
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>REPUBLIC OF THE PHILIPPINES</p>
-        <p>All content is in the public domain unless otherwise stated.</p>
-        <p><a href="#">Privacy Policy</a></p>
-        <p>ABOUT GOVPH</p>
-        <p>Learn more about the Philippine government, its structure, how government works, and the people behind it.</p>
-        <p><a href="#">Official Gazette</a> | <a href="#">Open Data Portal</a> | <a href="#">Send us your feedback</a></p>
-    </footer>
-
+    <?php renderFooter(); ?>
     <!-- Scripts -->
     <script src="restaurants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

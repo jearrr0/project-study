@@ -15,6 +15,8 @@ if ($conn->connect_error) {
 // Fetch events from the database
 $eventQuery = "SELECT id, title, description, event_date, img, latitude, longitude, location FROM events ORDER BY event_date ASC"; // Fetch all events with updated columns
 $eventResult = $conn->query($eventQuery);
+
+include '../includes/nav_footer.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -209,33 +211,7 @@ $eventResult = $conn->query($eventQuery);
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
-                <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title">CandonXplore</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../attractions/pages/historical-tourist-sites.php">Attractions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="hotels.php">Hotels</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../resto/restaurants.php">Restaurants</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/events/events.php">Events</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/profile/login.php">Profile</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <?php renderNav(); ?>
 
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
@@ -295,14 +271,7 @@ $eventResult = $conn->query($eventQuery);
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p>REPUBLIC OF THE PHILIPPINES</p>
-        <p>All content is in the public domain unless otherwise stated.</p>
-        <p><a href="#">Privacy Policy</a></p>
-        <p>ABOUT GOVPH</p>
-        <p>Learn more about the Philippine government, its structure, how government works, and the people behind it.</p>
-        <p><a href="#">Official Gazette</a> | <a href="#">Open Data Portal</a> | <a href="#">Send us your feedback</a></p>
-    </footer>
+    <?php renderFooter(); ?>
 
     <!-- Scripts -->
     <script src="events.js"></script>

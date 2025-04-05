@@ -155,17 +155,53 @@ body {
     margin: 20px 0;
 }
 footer {
-    background-color: #333;
-    color: white;
-    padding: 20px;
+    background-color: #222;
+    color: #ccc;
+    padding: 40px 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
-footer a {
+
+footer .footer-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+footer .footer-links a {
     color: #007bff;
     text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
 }
-footer a:hover {
-    text-decoration: underline;
+
+footer .footer-links a:hover {
+    color: #0056b3;
+}
+
+footer .social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+footer .social-icons a {
+    color: #ccc;
+    font-size: 20px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+footer .social-icons a:hover {
+    color: #007bff;
+    transform: scale(1.2);
+}
+
+footer p {
+    font-size: 14px;
+    margin: 0;
+    color: #888;
 }
 .slideshow-container {
     position: relative;
@@ -320,4 +356,114 @@ footer a:hover {
 
 .carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
     transform: scale(1.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero {
+        height: 50vh;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .hero h1 {
+        font-size: 24px;
+    }
+
+    .hero-content p {
+        font-size: 16px;
+    }
+
+    .section h2 {
+        font-size: 28px;
+    }
+
+    .card img {
+        height: 150px;
+    }
+
+    .card-content h3 {
+        font-size: 20px;
+    }
+
+    .card-content p {
+        font-size: 14px;
+    }
+
+    .card-content a {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .slideshow-container, .carousel-inner {
+        height: auto;
+    }
+
+    .slides img, .hotel-slides img, .resto-slides img, .events-slides img {
+        height: auto;
+    }
+
+    .info-panel {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .contact h2 {
+        font-size: 28px;
+    }
+
+    .social-links a {
+        font-size: 18px;
+    }
+
+    iframe {
+        width: 100%;
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 18px;
+    }
+
+    .hero-content p {
+        font-size: 14px;
+    }
+
+    .section h2 {
+        font-size: 24px;
+    }
+
+    .card-content h3 {
+        font-size: 18px;
+    }
+
+    .card-content p {
+        font-size: 12px;
+    }
+
+    .card-content a {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .info-panel {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .social-links a {
+        font-size: 16px;
+    }
+}
+
+/* Ensure carousel controls are touch-friendly */
+.carousel-control-prev, .carousel-control-next {
+    width: 10%;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    width: 30px;
+    height: 30px;
 }

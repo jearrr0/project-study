@@ -31,215 +31,12 @@ $result = $conn->query($sql);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome -->
 
     <style>
-    /* General card styling */
-    .card {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Image adjustments */
-    .card-img-top {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-    }
-
-    /* Card body layout */
-    .card-body {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 15px;
-    }
-
-    .card-title {
-        font-size: 1.4rem;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .card-text {
-        font-size: 0.9rem;
-        color: #555;
-    }
-
-    /* Contact details */
-    .hotel-contact {
-        font-size: 0.85rem;
-        color: #777;
-        margin-top: 10px;
-    }
-
-    /* Buttons */
-    .btn {
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 0.9rem;
-    }
-
-    /* Amenities */
-    .amenities {
-        font-size: 0.9rem;
-        color: #444;
-        margin-top: 10px;
-        font-weight: 500;
-    }
-
-    /* Location text */
-    .location {
-        font-size: 0.9rem;
-        color: #007bff;
-        font-weight: 600;
-    }
-
-    /* Nearby places */
-    .nearby {
-        font-size: 0.85rem;
-        color: #666;
-        font-style: italic;
-        margin-top: 5px;
-    }
-
-    /* Recommended hotels carousel styling */
-    .recommendation-section {
-        text-align: center;
-        margin-bottom: 20px;
-        width: 100%;
-    }
-
-    .recommendation-card img {
-        max-height: 200px;
-        object-fit: cover;
-        width: 100%;
-    }
-
-    .recommendation-card h6 {
-        font-size: 1rem;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-
-    .recommendation-card p {
-        font-size: 0.85rem;
-        color: #555;
-    }
-
-    .recommendation-card .btn {
-        font-size: 0.8rem;
-        padding: 5px 10px;
-    }
-
-    /* Where to Stay Section Styling */
-    .where-to-stay {
-        text-align: center;
-        margin-top: 30px;
-        padding: 20px;
-        background: linear-gradient(135deg, #007bff, #00c6ff);
-        color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .where-to-stay:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .where-to-stay h2 {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .where-to-stay p {
-        font-size: 1rem;
-        margin: 0;
-    }
-
-    /* Add colors to icons */
-    .card-body i {
-        color: #007bff; /* Primary color for icons */
-    }
-
-    .recommendation-card i {
-        color: #ff9800; /* Orange for recommendation icons */
-    }
-
-    /* Button colors */
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        border-color: #5a6268;
-    }
-
-    .btn-warning {
-        background-color: #ffc107;
-        border-color: #ffc107;
-    }
-
-    .btn-warning:hover {
-        background-color: #e0a800;
-        border-color: #e0a800;
-    }
-</style>
-
-    
+        /* Add your styles here */
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
-                <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title">CandonXplore</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../attractions/pages/historical-tourist-sites.php">Attractions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="hotels.php">Hotels</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../resto/restaurants.php">Restaurants</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/events/events.php">Events</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/project-study/profile/login.php">Profile</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <?php include '../includes/nav_footer.php'; ?>
+    <?php renderNav(); ?>
 
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
@@ -251,8 +48,8 @@ $result = $conn->query($sql);
 
     <!-- Where to Stay Section (Top) -->
     <div class="container-fluid mt-4">
-        <div class="where-to-stay">
-            <h2>Affordable Stays in Candon City</h2>
+        <div class="where-to-stay text-center py-5" style="background: linear-gradient(to right, #007bff, #00d4ff); border-radius: 10px; color: white;">
+            <h2 class="fw-bold">Affordable Stays in Candon City</h2>
             <p>Explore budget-friendly hotels and enjoy your stay without breaking the bank.</p>
         </div>
     </div>
@@ -260,22 +57,21 @@ $result = $conn->query($sql);
     <!-- Recommendations (Carousel) -->
     <div class="container-fluid mt-4">
         <div class="recommendation-section">
-            <h4>Recommended Hotels</h4>
+            <h4 class="text-center">Recommended Hotels</h4>
             <div id="recommendedHotelsCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <?php
                     if ($result->num_rows > 0) {
                         $active = true;
                         while ($recRow = $result->fetch_assoc()) {
-                            // Ensure image is properly encoded
                             $recImageSrc = (!empty($recRow['img'])) 
                                 ? "data:image/jpeg;base64," . base64_encode($recRow['img'])
                                 : "/project-study/uploads/default-hotel.jpg"; // Default image
                             ?>
                             <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
-                                <div class="recommendation-card text-center">
-                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid" alt="Recommended Hotel Image">
-                                    <h6><?php echo htmlspecialchars($recRow['title']); ?></h6>
+                                <div class="recommendation-card text-center mx-auto" style="max-width: 600px;">
+                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid rounded" alt="Recommended Hotel Image" style="max-height: 300px; object-fit: cover;">
+                                    <h6 class="mt-3"><?php echo htmlspecialchars($recRow['title']); ?></h6>
                                     <p><?php echo htmlspecialchars($recRow['location']); ?></p>
                                     <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($recRow['avg_rating'], 1); ?> / 5</p>
                                     <a href="hotel-details.php?id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-primary"><i class="fas fa-map-marker-alt"></i> View</a>
@@ -286,7 +82,7 @@ $result = $conn->query($sql);
                             $active = false;
                         }
                     } else {
-                        echo "<p>No recommendations available.</p>";
+                        echo "<p class='text-center'>No recommendations available.</p>";
                     }
                     ?>
                 </div>
@@ -300,59 +96,69 @@ $result = $conn->query($sql);
                 </button>
             </div>
         </div>
+    </div>
 
         <!-- Where to Stay Section (Bottom) -->
-        <div class="where-to-stay">
-            <h2>Where to Stay in Candon City</h2>
-            <p>Discover the best accommodations and enjoy your stay in the heart of Candon City.</p>
+        <div class="container-fluid mt-4">
+            <div class="where-to-stay text-center py-5" style="background: linear-gradient(to right, #007bff, #00d4ff); border-radius: 10px; color: white;">
+                <h2 class="fw-bold">Where to Stay in Candon City</h2>
+                <p>Discover the best accommodations and enjoy your stay in the heart of Candon City.</p>
+            </div>
         </div>
-    </div>
 
     <!-- Hotels & Recommendations Section -->
     <main>
         <div class="container mt-4">
             <div class="row justify-content-center">
-                <!-- Hotel Listings (Centered, Two per Row) -->
-                <div class="col-12 col-md-9">
+                <!-- Hotel Listings (Centered, Four per Row) -->
+                <div class="col-12">
                     <section class="section">
-                        <div class="row justify-content-center">
+                        <div class="row row-cols-1 row-cols-md-4 g-4">
                             <?php
-                            $hotelQuery = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating 
-                                           FROM hotels 
-                                           LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
-                                           GROUP BY hotels.id"; // Fetch all hotels with average ratings
+                            $hotelQuery = "SELECT id, title, location, rooms, img 
+                                           FROM hotels"; // Fetch only required fields
                             $hotelResult = $conn->query($hotelQuery);
 
                             if ($hotelResult->num_rows > 0) {
                                 while ($row = $hotelResult->fetch_assoc()) {
-                                    // Ensure image is properly encoded
                                     $imageSrc = (!empty($row['img'])) 
                                         ? "data:image/jpeg;base64," . base64_encode($row['img'])
                                         : "/project-study/uploads/default-hotel.jpg"; // Default image
                                     ?>
-                                    <div class="col-md-6 mb-4">
-                                        <div class="card">
-                                            <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="Hotel Image">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><i class="fas fa-hotel"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
-                                                <p class="card-text"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
-                                                <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <?php echo htmlspecialchars($row['location']); ?></p>
-                                                <p><i class="fas fa-phone"></i> <strong>Contact:</strong> <?php echo htmlspecialchars($row['contact_number']); ?> | <i class="fas fa-envelope"></i> <?php echo htmlspecialchars($row['email']); ?></p>
-                                                <p><i class="fas fa-door-open"></i> <strong>Rooms Available:</strong> <?php echo $row['rooms']; ?></p>
-                                                <p><i class="fas fa-tags"></i> <strong>Type:</strong> <?php echo htmlspecialchars($row['type']); ?></p>
-                                                <p><i class="fas fa-map"></i> <strong>Nearby Places:</strong> <?php echo htmlspecialchars($row['nearby_places']); ?></p>
-                                                <p><i class="fas fa-concierge-bell"></i> <strong>Amenities/Facilities:</strong> <?php echo htmlspecialchars($row['amenities_facilities']); ?></p>
-                                                <p><i class="fas fa-star" style="color: #ffc107;"></i> <strong>Average Rating:</strong> <?php echo number_format($row['avg_rating'], 1); ?> / 5</p>
-                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-compass"></i> Get Directions</a>
-                                                <button class="btn btn-secondary view-more-btn" data-hotel-id="<?php echo $row['id']; ?>"><i class="fas fa-eye"></i> View More</button>
-                                                <a href="/project-study/hotel_ratings.php?hotel_id=<?php echo $row['id']; ?>" class="btn btn-warning"><i class="fas fa-star"></i> Rate</a>
+                                    <div class="col">
+                                        <div class="card shadow-sm h-100">
+                                            <img src="<?php echo $imageSrc; ?>" class="card-img-top rounded-top" alt="Hotel Image" style="height: 200px; object-fit: cover;">
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title text-truncate"><?php echo htmlspecialchars($row['title']); ?></h5>
+                                                <p class="text-muted mb-2"><i class="fa-solid fa-location-dot"></i> <?php echo htmlspecialchars($row['location']); ?></p>
+                                                <p class="mb-3"><i class="fa-solid fa-bed"></i> Rooms Available: <?php echo $row['rooms']; ?></p>
+                                                <div class="mt-auto">
+                                                    <a href="/project-study/home/view_more_hotels.php?id=<?php echo $row['id']; ?>" class="btn btn-outline-secondary btn-sm w-100 mb-2">
+                                                        <i class="fa-solid fa-eye"></i> View More
+                                                    </a>
+                                                    <a href="/project-study/hotel_ratings.php?hotel_id=<?php echo $row['id']; ?>" class="btn btn-outline-warning btn-sm w-100 mb-2">
+                                                        <i class="fa-solid fa-star"></i> Rate
+                                                    </a>
+                                                    <a href="<?php 
+                                                        if (!empty($row['latitude']) && !empty($row['longitude'])) {
+                                                            echo "https://www.google.com/maps/dir/?api=1&destination={$row['latitude']},{$row['longitude']}";
+                                                        } else {
+                                                            echo "#"; // Fallback if coordinates are missing
+                                                        }
+                                                    ?>" 
+                                                    target="_blank" 
+                                                    class="btn btn-outline-primary btn-sm w-100" 
+                                                    <?php if (empty($row['latitude']) || empty($row['longitude'])) echo 'disabled'; ?>>
+                                                        <i class="fa-solid fa-compass"></i> Get Directions
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <?php
                                 }
                             } else {
-                                echo "<p>No hotels found.</p>";
+                                echo "<p class='text-center'>No hotels found.</p>";
                             }
                             ?>
                         </div>
@@ -362,46 +168,10 @@ $result = $conn->query($sql);
         </div>
     </main>
 
-    
+    <?php renderFooter(); ?>
 
-    <!-- Footer -->
-    <footer>
-        <p>REPUBLIC OF THE PHILIPPINES</p>
-        <p>All content is in the public domain unless otherwise stated.</p>
-        <p><a href="#">Privacy Policy</a></p>
-        <p>ABOUT GOVPH</p>
-        <p>Learn more about the Philippine government, its structure, how government works, and the people behind it.</p>
-        <p><a href="#">Official Gazette</a> | <a href="#">Open Data Portal</a> | <a href="#">Send us your feedback</a></p>
-    </footer>
-
-    <!-- Scripts -->
     <script src="hotels.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-    // Add functionality for "View More" button
-    document.querySelectorAll('.view-more-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const hotelId = this.getAttribute('data-hotel-id');
-            // Fetch and display all details for the selected hotel
-            alert('Displaying more details for hotel ID: ' + hotelId);
-            // You can replace this alert with a modal or a new page to show full details
-        });
-    });
-
-
-
-    // Handle form submission for rating
-    document.getElementById('rateHotelForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-
-        fetch('submit-rating.php', {
-            method: 'POST',
-            body: formData
-        })
-  
-    });
-    </script>
 </body>
 </html>
 

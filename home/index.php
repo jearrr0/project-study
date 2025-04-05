@@ -17,72 +17,20 @@ $db_selected = mysqli_select_db($conn, $dbname);
 if (!$db_selected) {
     die("Database selection failed: " . mysqli_error($conn));
 }
+
+include '../includes/nav_footer.php';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>CandonXplore</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="index.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Existing Navigation Bar -->
-        <nav class="navbar bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">
-                    <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
-                    <span style="font-family: 'Arial', sans-serif; font-weight: bold;">CandonXplore</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CandonXplore</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="index.php">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Attractions
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
-                                    <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
-                                    <li><a class="dropdown-item" href="../attractions/pages/historical-landsites.php">Historical Landsites</a></li>
-                                    <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php">Recreational Facilities</a></li>
-                                    <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php">Livelihoods</a></li>
-                                    <li><a class="dropdown-item" href="../attractions/pages/ancestral-houses.php">Ancestral Houses</a></li>
-                                    <li><a class="dropdown-item" href="../attractions/pages/experience.php">Experience</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="../hotels/hotels.php">Hotels</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="../resto/restaurants.php">Restaurants</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/project-study/events/events.php">Events</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/project-study/profile/login.php">Profile</a>
-                            </li>
-                        </ul>
-                        <form class="d-flex mt-3" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    <!-- Removed duplicate navigation bar -->
+    <?php renderNav(); ?>
     <div class="hero" style="background-image: url('../uploads/home/image-2-1024x724.jpg');">
         <div class="hero-content">
             <h1>Candon City: The Tobacco Capital of the Philippines</h1>
@@ -301,21 +249,10 @@ if (!$db_selected) {
                 <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
                 <a href="https://www.pinterest.com" target="_blank">Pinterest</a>
             </div>
-            <div class="map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3856.123456789012!2d120.456789012345!3d17.123456789012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3391a1234567890b%3A0x1234567890abcdef!2sCandon%20City%2C%20Ilocos%20Sur%2C%20Philippines!5e0!3m2!1sen!2sph!4v1234567890123" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-            </div>
+            
         </section>
     </main>
-    <footer>
-        <p>REPUBLIC OF THE PHILIPPINES</p>
-        <p>All content is in the public domain unless otherwise stated.</p>
-        <p><a href="#">Privacy Policy</a></p>
-        <p>ABOUT GOVPH</p>
-        <p>Learn more about the Philippine government, its structure, how government works and the people behind it.</p>
-        <p><a href="#">Official Gazette</a> | <a href="#">Open Data Portal</a> | <a href="#">Send us your feedback</a></p>
-        <p>GOVERNMENT LINKS</p>
-        <p><a href="#">Office of the President</a> | <a href="#">Office of the Vice President</a> | <a href="#">Senate of the Philippines</a> | <a href="#">House of Representatives</a> | <a href="#">Supreme Court</a> | <a href="#">Court of Appeals</a> | <a href="#">Sandiganbayan</a></p>
-    </footer>
+    <?php renderFooter(); ?>
     <script src="index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
