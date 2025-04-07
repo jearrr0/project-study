@@ -48,15 +48,20 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            margin-top: 100px; /* Adjust to match header height */
-            margin-bottom: 80px; /* Adjust to match footer height */
-        }
-        .navbar-brand span {
+            margin-top: 100px;
+            margin-bottom: 80px;
             font-family: 'Arial', sans-serif;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #007bff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
         }
         .card-title {
             font-size: 2rem;
@@ -70,6 +75,15 @@ $conn->close();
         .btn-primary:hover {
             background-color: #0056b3;
             border-color: #0056b3;
+        }
+        .social-icons a {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .social-icons a:hover {
+            color: #0056b3;
         }
     </style>
 </head>
@@ -134,27 +148,39 @@ $conn->close();
 
 <div class="container mt-5">
     <div class="card shadow-lg">
-        <div class="card-body">
-            <h1 class="card-title text-center">
+        <div class="card-body text-center">
+            <img src="<?php echo (!empty($hotel['img'])) ? "data:image/jpeg;base64," . base64_encode($hotel['img']) : "/project-study/uploads/default-hotel.jpg"; ?>" alt="Hotel Image" class="img-fluid rounded mb-4">
+            <h1 class="card-title">
                 <i class="bi bi-building"></i> <?php echo htmlspecialchars($hotel['title']); ?>
             </h1>
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <img src="<?php echo (!empty($hotel['img'])) ? "data:image/jpeg;base64," . base64_encode($hotel['img']) : "/project-study/uploads/default-hotel.jpg"; ?>" alt="Hotel Image" class="img-fluid rounded">
-                </div>
-                <div class="col-md-6">
-                    <p><i class="bi bi-geo-alt"></i> <strong>Location:</strong> <?php echo htmlspecialchars($hotel['location']); ?></p>
-                    <p><i class="bi bi-telephone"></i> <strong>Contact Number:</strong> <?php echo htmlspecialchars($hotel['contact_number']); ?></p>
-                    <p><i class="bi bi-envelope"></i> <strong>Email:</strong> <?php echo htmlspecialchars($hotel['email']); ?></p>
-                    <p><i class="bi bi-door-open"></i> <strong>Rooms Available:</strong> <?php echo $hotel['rooms']; ?></p>
-                    <p><i class="bi bi-building"></i> <strong>Type:</strong> <?php echo htmlspecialchars($hotel['type']); ?></p>
-                    <p><i class="bi bi-map"></i> <strong>Nearby Places:</strong> <?php echo htmlspecialchars($hotel['nearby_places']); ?></p>
-                    <p><i class="bi bi-list-check"></i> <strong>Amenities & Facilities:</strong> <?php echo htmlspecialchars($hotel['amenities_facilities']); ?></p>
-                    <p><i class="bi bi-info-circle"></i> <strong>Description:</strong> <?php echo htmlspecialchars($hotel['description']); ?></p>
-                    <p><i class="bi bi-compass"></i> <strong>Latitude:</strong> <?php echo htmlspecialchars($hotel['latitude']); ?></p>
-                    <p><i class="bi bi-compass"></i> <strong>Longitude:</strong> <?php echo htmlspecialchars($hotel['longitude']); ?></p>
-                    <p><i class="bi bi-globe"></i> <strong>Website:</strong> <a href="<?php echo htmlspecialchars($hotel['website_link']); ?>" target="_blank">Visit Website</a></p>
-                </div>
+            <p><i class="bi bi-info-circle"></i> <strong>Description:</strong> <?php echo htmlspecialchars($hotel['description']); ?></p>
+            <p><i class="bi bi-geo-alt"></i> <strong>Location:</strong> <?php echo htmlspecialchars($hotel['location']); ?></p>
+            <p><i class="bi bi-telephone"></i> <strong>Contact Number:</strong> <?php echo htmlspecialchars($hotel['contact_number']); ?></p>
+            <p><i class="bi bi-envelope"></i> <strong>Email:</strong> <?php echo htmlspecialchars($hotel['email']); ?></p>
+            <p><i class="bi bi-door-open"></i> <strong>Rooms Available:</strong> <?php echo $hotel['rooms']; ?></p>
+            <p><i class="bi bi-building"></i> <strong>Type:</strong> <?php echo htmlspecialchars($hotel['type']); ?></p>
+            <p><i class="bi bi-map"></i> <strong>Nearby Places:</strong> <?php echo htmlspecialchars($hotel['nearby_places']); ?></p>
+            <p><i class="bi bi-list-check"></i> <strong>Amenities & Facilities:</strong> <?php echo htmlspecialchars($hotel['amenities_facilities']); ?></p>
+            <div class="social-icons mt-3">
+                <?php 
+                if (!empty($hotel['website_link'])) {
+                    $links = explode(',', $hotel['website_link']);
+                    foreach ($links as $link) {
+                        $trimmedLink = trim($link);
+                        if (strpos($trimmedLink, 'facebook.com') !== false) {
+                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-facebook'></i></a>";
+                        } elseif (strpos($trimmedLink, 'instagram.com') !== false) {
+                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-instagram'></i></a>";
+                        } elseif (strpos($trimmedLink, 'google.com') !== false) {
+                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-google'></i></a>";
+                        } else {
+                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-link-45deg'></i></a>";
+                        }
+                    }
+                } else {
+                    echo "<p>No website links available.</p>";
+                }
+                ?>
             </div>
             <div class="text-center mt-4">
                 <a href="/project-study/hotels/hotels.php" class="btn btn-primary">

@@ -48,12 +48,7 @@ function renderNav() {
                     <li class="nav-item">
                         <a class="nav-link" href="/project-study/profile/login.php"><i class="bi bi-person"></i> Profile</a>
                     </li>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </form>
+                   
                 </ul>
             </div>
         </div>

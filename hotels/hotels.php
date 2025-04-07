@@ -122,8 +122,10 @@ $result = $conn->query($sql);
                                     <h6 class="mt-3"><?php echo htmlspecialchars($recRow['title']); ?></h6>
                                     <p><?php echo htmlspecialchars($recRow['location']); ?></p>
                                     <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($recRow['avg_rating'], 1); ?> / 5</p>
-                                    <a href="hotel-details.php?id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-primary"><i class="fas fa-map-marker-alt"></i> View</a>
-                                    <a href="/project-study/rate.php?resto_id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-warning"><i class="fas fa-star"></i> Rate</a>
+                                    <a href="/project-study/home/view_more_hotels.php?id=<?php echo $recRow['id']; ?>" 
+                                       class="btn btn-modern btn-modern-primary btn-sm mt-2">
+                                        <i class="fa-solid fa-eye"></i> View More
+                                    </a>
                                 </div>
                             </div>
                             <?php

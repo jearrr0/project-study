@@ -264,16 +264,16 @@ $siteResult = $conn->query($siteQuery);
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
         <div class="hero-content">
-            <h1>Explore Historical Sites</h1>
-            <p>Discover the rich history and culture of Candon City! 🏛️📜</p>
+            <h1>Explore Natural Tourist Sites</h1>
+            <p>Immerse yourself in the breathtaking natural beauty of Candon City! 🌿🏞️</p>
         </div>
     </div>
 
     <!-- Where to Stay Section (Top) -->
     <div class="container-fluid mt-4">
         <div class="where-to-stay">
-            <h2>Historical Tourist Sites in Candon City</h2>
-            <p>Explore the landmarks that define the city's heritage.</p>
+            <h2>Natural Tourist Sites in Candon City</h2>
+            <p>Discover the serene and breathtaking natural wonders of the city.</p>
         </div>
     </div>
 

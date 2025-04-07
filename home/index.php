@@ -27,6 +27,7 @@ include '../includes/nav_footer.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="index.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -59,45 +60,45 @@ include '../includes/nav_footer.php';
             <h2 class="text-center my-4">Where to Visit</h2>
             <div class="slideshow-container">
                 <div class="slides fade">
-                    <img src="../uploads/home/1 (1).jpg" alt="Experience">
+                    <img src="../uploads/liveli/a.png" alt="Experience">
                     <div class="info-panel">
                         <p>Experience the beauty and culture of Candon City.</p>
-                        <a href="experience.html">View More</a>
+                        <a href="../attractions/pages/experienceprogram.php">View More</a>
                     </div>
                 </div>
                 <div class="slides fade">
-                    <img src="../uploads/home/1 (2).jpg" alt="Historical Tourist Sites">
+                    <img src="../uploads/candon pic/2/Screenshot 2025-03-28 094930.png" alt="Historical Tourist Sites">
                     <div class="info-panel">
                         <p>Discover the historical tourist sites of Candon City.</p>
-                        <a href="historical-tourist-sites.html">View More</a>
+                        <a href="../attractions\pages\historical-tourist-sites.php">View More</a>
                     </div>
                 </div>
                 <div class="slides fade">
-                    <img src="../uploads/home/1 (3).jpg" alt="Historical Landsites">
+                    <img src="../uploads/bg.png" alt="Historical Landsites">
                     <div class="info-panel">
-                        <p>Explore the historical landsites of Candon City.</p>
-                        <a href="historical-landsites.html">View More</a>
+                        <p>Explore the Natural Tourist sites of Candon City.</p>
+                        <a href="../attractions\pages\natural_tourist_sites.php">View More</a>
                     </div>
                 </div>
                 <div class="slides fade">
-                    <img src="../uploads/home/1 (4).jpg" alt="Livelihoods">
+                    <img src="../uploads/liveli/a.png" alt="Livelihoods">
                     <div class="info-panel">
                         <p>Learn about the livelihoods of the people in Candon City.</p>
-                        <a href="livelihoods.html">View More</a>
+                        <a href="../attractions\pages\livelihoods.php">View More</a>
                     </div>
                 </div>
                 <div class="slides fade">
-                    <img src="../uploads/home/1 (5).jpg" alt="Ancestral Houses">
+                    <img src="../uploads/candon pic/ansstral 1/3.PNG" alt="Ancestral Houses">
                     <div class="info-panel">
                         <p>Visit the ancestral houses in Candon City.</p>
-                        <a href="ancestral-houses.html">View More</a>
+                        <a href="../attractions\pages\ancestral_houses.php">View More</a>
                     </div>
                 </div>
                 <div class="slides fade">
-                    <img src="../uploads/home/1 (6).jpg" alt="New Attraction">
+                    <img src="../uploads/candon pic/2/Screenshot 2025-03-28 100007.png" alt="New Attraction">
                     <div class="info-panel">
-                        <p>Discover new attractions in Candon City.</p>
-                        <a href="new-attraction.html">View More</a>
+                        <p>Discover the recreational sites and activities in Candon City.</p>
+                        <a href="../attractions\pages\recreational-facilities.php">View More</a>
                     </div>
                 </div>
                 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
@@ -115,7 +116,8 @@ include '../includes/nav_footer.php';
         </section>
         
         <section class="section">
-            <h2>Where to Stay</h2>
+            <h2 style="text-align: center; margin-top: 20px; font-size: 2rem; font-weight: bold;">Where to Stay in Candon City</h2>
+            <p style="text-align: center; margin: 10px 0; font-size: 1.2rem; color: #555;">Discover the best accommodations in Candon City, from luxurious hotels to cozy inns, offering comfort and convenience for your stay.</p>
             <div id="hotelCarousel" class="carousel slide" data-bs-ride="carousel" style="position: relative;">
                 <div class="carousel-inner">
                     <?php
@@ -154,7 +156,8 @@ include '../includes/nav_footer.php';
         </section>
 
         <section class="section">
-            <h2>Where to Eat</h2>
+            <h2 style="text-align: center; margin-top: 20px; font-size: 2rem; font-weight: bold;">Where to Dine in Candon City</h2>
+            <p style="text-align: center; margin: 10px 0; font-size: 1.2rem; color: #555;">Explore the finest dining options in Candon City, offering a variety of cuisines to satisfy your cravings.</p>
             <div id="restaurantCarousel" class="carousel slide" data-bs-ride="carousel" style="position: relative;">
                 <div class="carousel-inner">
                     <?php
@@ -193,7 +196,8 @@ include '../includes/nav_footer.php';
         </section>
 
         <section class="section">
-            <h2>Where to Attend Events</h2>
+            <h2 style="text-align: center; margin-top: 20px; font-size: 2rem; font-weight: bold;">Events to Attend in Candon City</h2>
+            <p style="text-align: center; margin: 10px 0; font-size: 1.2rem; color: #555;">Join the vibrant events and festivals that celebrate the culture and traditions of Candon City.</p>
             <div id="eventCarousel" class="carousel slide" data-bs-ride="carousel" style="position: relative;">
                 <div class="carousel-inner">
                     <?php
@@ -231,16 +235,7 @@ include '../includes/nav_footer.php';
             </div>
         </section>
 
-        <section class="contact">
-            <h2>Contact Us</h2>
-            <div class="social-links">
-                <a href="https://www.facebook.com" target="_blank">Facebook</a>
-                <a href="https://www.twitter.com" target="_blank">Twitter</a>
-                <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
-                <a href="https://www.pinterest.com" target="_blank">Pinterest</a>
-            </div>
-            
-        </section>
+        
     </main>
     <?php renderFooter(); ?>
     <script src="index.js"></script>

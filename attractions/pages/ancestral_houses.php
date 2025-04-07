@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 // Fetch ancestral houses from the database with search functionality
 $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $siteQuery = "SELECT id, title, description, img, latitude, longitude 
-              FROM ancestral_houses 
+              FROM ancestral_house
               WHERE title LIKE ? OR description LIKE ? 
               ORDER BY title ASC";
 $stmt = $conn->prepare($siteQuery);

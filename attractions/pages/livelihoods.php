@@ -300,7 +300,6 @@ $siteResult = $conn->query($siteQuery);
                                                 <p class="card-text"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
                                                 <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <?php echo $location; ?></p>
                                                 <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-compass"></i> Get Directions</a>
-                                                <a href="site-details.php?id=<?php echo $row['id']; ?>" class="btn btn-secondary mt-2"><i class="fas fa-info-circle"></i> View More</a> <!-- View More Button -->
                                             </div>
                                         </div>
                                     </div>
