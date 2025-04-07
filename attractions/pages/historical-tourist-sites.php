@@ -232,12 +232,12 @@ $siteResult = $conn->query($siteQuery);
                                 Attractions
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
-                                <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php">Recreational Facilities</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php">Livelihoods</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/ancestral_houses.php">Ancestral Houses</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/experienceprogram.php">Experience Program</a></li>
+                                <li><a class="dropdown-item" href="../pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
+                                <li><a class="dropdown-item" href="../pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
+                                <li><a class="dropdown-item" href="../pages/recreational-facilities.php">Recreational Facilities</a></li>
+                                <li><a class="dropdown-item" href="../pages/livelihoods.php">Livelihoods</a></li>
+                                <li><a class="dropdown-item" href="../pages/ancestral_houses.php">Ancestral Houses</a></li>
+                                <li><a class="dropdown-item" href="../pages/experienceprogram.php">Experience Program</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">

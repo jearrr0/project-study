@@ -32,6 +32,54 @@ $result = $conn->query($sql);
 
     <style>
         /* Add your styles here */
+        /* Modern button styles */
+        .btn-modern {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+
+        .btn-modern-primary {
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            color: white;
+            border: none;
+        }
+
+        .btn-modern-primary:hover {
+            background: linear-gradient(45deg, #0056b3, #0099cc);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-modern-warning {
+            background: linear-gradient(45deg, #ffc107, #ff8c00);
+            color: white;
+            border: none;
+        }
+
+        .btn-modern-warning:hover {
+            background: linear-gradient(45deg, #e0a800, #cc7000);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-modern-secondary {
+            background: linear-gradient(45deg, #6c757d, #343a40);
+            color: white;
+            border: none;
+        }
+
+        .btn-modern-secondary:hover {
+            background: linear-gradient(45deg, #5a6268, #23272b);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-modern i {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -115,12 +163,17 @@ $result = $conn->query($sql);
                     <section class="section">
                         <div class="row row-cols-1 row-cols-md-4 g-4">
                             <?php
-                            $hotelQuery = "SELECT id, title, location, rooms, img 
-                                           FROM hotels"; // Fetch only required fields
+                            $hotelQuery = "SELECT hotels.id AS hotel_id, hotels.title, hotels.location, hotels.rooms, hotels.img, 
+                                                  hotels.latitude, hotels.longitude, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating 
+                                           FROM hotels 
+                                           LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+                                           GROUP BY hotels.id"; // Explicitly qualify column names
                             $hotelResult = $conn->query($hotelQuery);
 
                             if ($hotelResult->num_rows > 0) {
                                 while ($row = $hotelResult->fetch_assoc()) {
+                                    $latitude = $row['latitude'] ?? null;
+                                    $longitude = $row['longitude'] ?? null;
                                     $imageSrc = (!empty($row['img'])) 
                                         ? "data:image/jpeg;base64," . base64_encode($row['img'])
                                         : "/project-study/uploads/default-hotel.jpg"; // Default image
@@ -132,24 +185,26 @@ $result = $conn->query($sql);
                                                 <h5 class="card-title text-truncate"><?php echo htmlspecialchars($row['title']); ?></h5>
                                                 <p class="text-muted mb-2"><i class="fa-solid fa-location-dot"></i> <?php echo htmlspecialchars($row['location']); ?></p>
                                                 <p class="mb-3"><i class="fa-solid fa-bed"></i> Rooms Available: <?php echo $row['rooms']; ?></p>
+                                                <p class="mb-3">
+                                                    <i class="fas fa-star" style="color: #ffc107;"></i> 
+                                                    Overall Rating: <?php echo number_format($row['avg_rating'], 1); ?> / 5
+                                                </p>
                                                 <div class="mt-auto">
-                                                    <a href="/project-study/home/view_more_hotels.php?id=<?php echo $row['id']; ?>" class="btn btn-outline-secondary btn-sm w-100 mb-2">
+                                                    <a href="/project-study/home/view_more_hotels.php?id=<?php echo $row['hotel_id']; ?>" 
+                                                       class="btn btn-modern btn-modern-secondary btn-sm w-100 mb-2">
                                                         <i class="fa-solid fa-eye"></i> View More
                                                     </a>
-                                                    <a href="/project-study/hotel_ratings.php?hotel_id=<?php echo $row['id']; ?>" class="btn btn-outline-warning btn-sm w-100 mb-2">
+                                                    <a href="/project-study/hotel_ratings.php?hotel_id=<?php echo $row['hotel_id']; ?>" 
+                                                       class="btn btn-modern btn-modern-warning btn-sm w-100 mb-2">
                                                         <i class="fa-solid fa-star"></i> Rate
                                                     </a>
-                                                    <a href="<?php 
-                                                        if (!empty($row['latitude']) && !empty($row['longitude'])) {
-                                                            echo "https://www.google.com/maps/dir/?api=1&destination={$row['latitude']},{$row['longitude']}";
-                                                        } else {
-                                                            echo "#"; // Fallback if coordinates are missing
-                                                        }
-                                                    ?>" 
-                                                    target="_blank" 
-                                                    class="btn btn-outline-primary btn-sm w-100" 
-                                                    <?php if (empty($row['latitude']) || empty($row['longitude'])) echo 'disabled'; ?>>
-                                                        <i class="fa-solid fa-compass"></i> Get Directions
+                                                    <a href="<?php echo (!empty($row['latitude']) && !empty($row['longitude'])) 
+                                                        ? "https://www.google.com/maps/dir/?api=1&destination={$row['latitude']},{$row['longitude']}" 
+                                                        : '#'; ?>" 
+                                                        target="_blank" 
+                                                        class="btn btn-modern btn-modern-primary btn-sm w-100" 
+                                                        <?php if (empty($row['latitude']) || empty($row['longitude'])) echo 'disabled'; ?>>
+                                                        <i class="fas fa-compass"></i> Get Directions
                                                     </a>
                                                 </div>
                                             </div>
@@ -172,6 +227,34 @@ $result = $conn->query($sql);
 
     <script src="hotels.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    function getDirections(destinationLat, destinationLng) {
+        if (!destinationLat || !destinationLng) {
+            alert("Destination coordinates are missing or invalid.");
+            console.error("Invalid destination coordinates:", destinationLat, destinationLng);
+            return;
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    console.log("User's location:", userLat, userLng);
+                    const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${destinationLat},${destinationLng}`;
+                    window.open(directionsUrl, "_blank");
+                },
+                (error) => {
+                    alert("Unable to retrieve your location. Please enable location services.");
+                    console.error("Geolocation error:", error);
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+            console.error("Geolocation not supported.");
+        }
+    }
+    </script>
 </body>
 </html>
 

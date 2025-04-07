@@ -1,64 +1,6 @@
 <?php
-session_start();
-$conn = new mysqli("localhost", "root", "", "candonxplore_db");
-
-if (isset($_SESSION['user'])) {
-    header("Location: profile.php"); // Redirect if already logged in
-    exit();
-}
-
-$error = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
-
-    // Fetch user data
-    $query = $conn->prepare("SELECT * FROM users WHERE uname=?");
-    $query->bind_param("s", $username);
-    $query->execute();
-    $result = $query->get_result();
-    $userData = $result->fetch_assoc();
-
-    if ($userData && password_verify($password, $userData['pword'])) {
-        $_SESSION['user'] = [
-            'uname' => $userData['uname'],
-            'name' => $userData['name'],
-            'contact' => $userData['contact'],
-            'address' => $userData['address']
-        ];
-        header("Location: profile.php"); // Redirect to profile after login
-        exit();
-    } else {
-        $error = "Invalid username or password.";
-    }
-}
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CandonXplore</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .login-card {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 100px;
-            margin-bottom: 50px;
-        }
-    </style>
-</head>
-<body style="background: url('../uploads/bg.png') no-repeat center center fixed; background-size: cover; margin: 0; padding: 0; font-family: 'Arial', sans-serif;">
+function renderNav() {
+    ?>
 <!-- Navigation Bar -->
 <nav class="navbar bg-body-tertiary fixed-top" style="padding: 0.5rem 1rem;">
     <div class="container-fluid">
@@ -86,12 +28,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <i class="bi bi-map"></i> Attractions
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
-                            <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php"><i class="bi bi-bank"></i> Historical Tourist Sites</a></li>
-                            <li><a class="dropdown-item" href="../attractions/pages/natural_tourist_sites.php"><i class="bi bi-tree"></i> Natural Tourist Sites</a></li>
-                            <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php"><i class="bi bi-basket"></i> Recreational Facilities</a></li>
-                            <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php"><i class="bi bi-briefcase"></i> Livelihoods</a></li>
-                            <li><a class="dropdown-item" href="../attractions/pages/ancestral_houses.php"><i class="bi bi-house"></i> Ancestral Houses</a></li>
-                            <li><a class="dropdown-item" href="../attractions/pages/experienceprogram.php"><i class="bi bi-people"></i> Experience Program</a></li>
+                            <li><a class="dropdown-item" href="../pages/historical-tourist-sites.php"><i class="bi bi-bank"></i> Historical Tourist Sites</a></li>
+                            <li><a class="dropdown-item" href="../pages/natural_tourist_sites.php"><i class="bi bi-tree"></i> Natural Tourist Sites</a></li>
+                            <li><a class="dropdown-item" href="../pages/recreational-facilities.php"><i class="bi bi-basket"></i> Recreational Facilities</a></li>
+                            <li><a class="dropdown-item" href="../pages/livelihoods.php"><i class="bi bi-briefcase"></i> Livelihoods</a></li>
+                            <li><a class="dropdown-item" href="../pages/ancestral_houses.php"><i class="bi bi-house"></i> Ancestral Houses</a></li>
+                            <li><a class="dropdown-item" href="../pages/experienceprogram.php"><i class="bi bi-people"></i> Experience Program</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -106,39 +48,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <li class="nav-item">
                         <a class="nav-link" href="/project-study/profile/login.php"><i class="bi bi-person"></i> Profile</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-outline-danger text-black px-3 ms-2" href="profile.php?logout=true" style="border: 2px solid #dc3545; border-radius: 20px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </a>
-                    </li>
+                    <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </form>
                 </ul>
             </div>
         </div>
     </div>
 </nav>
+    <?php
+}
 
-<div class="container">
-    <div class="login-card text-center">
-        <h3 class="fw-bold"><i class="bi bi-person-circle"></i> Login to CandonXplore</h3>
-        <hr>
-        <?php if ($error): ?><div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> <?= htmlspecialchars($error) ?></div><?php endif; ?>
-
-        <form method="POST">
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-person"></i> Username</label>
-                <input type="text" name="username" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-lock"></i> Password</label>
-                <input type="password" name="password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Login</button>
-        </form>
-
-        <a href="register.php" class="btn btn-link mt-3"><i class="bi bi-person-plus"></i> Create an Account</a>
-    </div>
-</div>
-
+function renderFooter() {
+    ?>
+<head>
+    <!-- Add this line to include Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- ...existing code... -->
+</head>
 <footer style="display: flex; justify-content: space-around; align-items: center; padding: 20px; background-color: #f8f9fa; color: black;">
     <div style="text-align: center; flex: 1;">
         <img src="../uploads/Coat_of_arms_of_the_Philippines.svg.png" alt="Philippine Coat of Arms" style="width: 100px;">
@@ -168,6 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </p>
     </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+    <?php
+}
+?>

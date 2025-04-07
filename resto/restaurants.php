@@ -12,19 +12,14 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch restaurants from the database
-$sql = "SELECT resto.id, resto.title, resto.type_of_resto, resto.location, resto.contacts, resto.services, 
-               resto.best_seller_images, resto.resto_image, resto.description, resto.latitude, resto.longitude, 
-               IFNULL(AVG(resto_ratings.rating), 0) AS avg_rating 
+// Fetch recommended restaurants
+$sql = "SELECT resto.*, IFNULL(AVG(resto_ratings.rating), 0) AS avg_rating 
         FROM resto 
         LEFT JOIN resto_ratings ON resto.id = resto_ratings.resto_id 
         GROUP BY resto.id 
-        ORDER BY RAND() LIMIT 3"; // Fetch 3 random restaurants with average ratings for recommendations
+        ORDER BY RAND() LIMIT 3";
 $result = $conn->query($sql);
-
-include '../includes/nav_footer.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,147 +28,62 @@ include '../includes/nav_footer.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <style>
-    /* General card styling */
-    .card {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+        /* Add your styles here */
+        .btn-modern {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            border-radius: 50px;
+            font-weight: bold;
+        }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
+        .btn-modern-primary {
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            color: white;
+            border: none;
+        }
 
-    /* Image adjustments */
-    .card-img-top {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-    }
+        .btn-modern-primary:hover {
+            background: linear-gradient(45deg, #0056b3, #0099cc);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5);
+            transform: translateY(-2px);
+        }
 
-    /* Card body layout */
-    .card-body {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 15px;
-    }
+        .btn-modern-warning {
+            background: linear-gradient(45deg, #ffc107, #ff8c00);
+            color: white;
+            border: none;
+        }
 
-    .card-title {
-        font-size: 1.4rem;
-        font-weight: bold;
-        color: #333;
-    }
+        .btn-modern-warning:hover {
+            background: linear-gradient(45deg, #e0a800, #cc7000);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.5);
+            transform: translateY(-2px);
+        }
 
-    .card-text {
-        font-size: 0.9rem;
-        color: #555;
-    }
+        .btn-modern-secondary {
+            background: linear-gradient(45deg, #6c757d, #343a40);
+            color: white;
+            border: none;
+        }
 
-    /* Contact details */
-    .restaurant-contact {
-        font-size: 0.85rem;
-        color: #777;
-        margin-top: 10px;
-    }
+        .btn-modern-secondary:hover {
+            background: linear-gradient(45deg, #5a6268, #23272b);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.5);
+            transform: translateY(-2px);
+        }
 
-    /* Buttons */
-    .btn {
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 0.9rem;
-    }
-
-    /* Location text */
-    .location {
-        font-size: 0.9rem;
-        color: #007bff;
-        font-weight: 600;
-    }
-
-    /* Recommended restaurants carousel styling */
-    .recommendation-section {
-        text-align: center;
-        margin-bottom: 20px;
-        width: 100%;
-    }
-
-    .recommendation-card img {
-        max-height: 200px;
-        object-fit: cover;
-        width: 100%;
-    }
-
-    .recommendation-card h6 {
-        font-size: 1rem;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-
-    .recommendation-card p {
-        font-size: 0.85rem;
-        color: #555;
-    }
-
-    .recommendation-card .btn {
-        font-size: 0.8rem;
-        padding: 5px 10px;
-    }
-
-    /* Add colors to icons */
-    .card-body i {
-        color: #007bff; /* Primary color for icons */
-    }
-
-    .recommendation-card i {
-        color: #ff9800; /* Orange for recommendation icons */
-    }
-
-    /* Button colors */
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        border-color: #5a6268;
-    }
-
-    .btn-warning {
-        background-color: #ffc107;
-        border-color: #ffc107;
-    }
-
-    .btn-warning:hover {
-        background-color: #e0a800;
-        border-color: #e0a800;
-    }
-</style>
-
-    
+        .btn-modern i {
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
-<?php renderNav(); ?>
+    <?php include '../includes/nav_footer.php'; ?>
+    <?php renderNav(); ?>
 
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
@@ -182,11 +92,15 @@ include '../includes/nav_footer.php';
             <p>Find the best restaurants in Candon City.</p>
         </div>
     </div>
-
-    <!-- Recommendations (Carousel) -->
+<!-- Highlight Section -->
+<div class="highlight-section text-center py-5" style="background: linear-gradient(45deg, #007bff, #00d4ff); color: white; border-radius: 10px; margin: 20px;">
+    <h2>Affordable Dining in Candon City</h2>
+    <p>Discover top-rated restaurants offering delicious meals at budget-friendly prices. Savor the taste of Candon City without overspending.</p>
+</div>
+    <!-- Recommendations Section -->
     <div class="container-fluid mt-4">
         <div class="recommendation-section">
-            <h4>Recommended Restaurants</h4>
+            <h4 class="text-center">Recommended Restaurants</h4>
             <div id="recommendedRestaurantsCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <?php
@@ -195,23 +109,23 @@ include '../includes/nav_footer.php';
                         while ($recRow = $result->fetch_assoc()) {
                             $recImageSrc = (!empty($recRow['resto_image'])) 
                                 ? "data:image/jpeg;base64," . base64_encode($recRow['resto_image'])
-                                : "/project-study/uploads/default-restaurant.jpg"; // Default image
+                                : "/project-study/uploads/default-restaurant.jpg";
                             ?>
                             <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
-                                <div class="recommendation-card text-center">
-                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid" alt="Recommended Restaurant Image">
-                                    <h6><?php echo htmlspecialchars($recRow['title']); ?></h6>
+                                <div class="recommendation-card text-center mx-auto" style="max-width: 600px;">
+                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid rounded" alt="Recommended Restaurant Image" style="max-height: 300px; object-fit: cover;">
+                                    <h6 class="mt-3"><?php echo htmlspecialchars($recRow['title']); ?></h6>
                                     <p><?php echo htmlspecialchars($recRow['location']); ?></p>
                                     <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($recRow['avg_rating'], 1); ?> / 5</p>
-                                    <a href="restaurant-details.php?id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-primary"><i class="fas fa-map-marker-alt"></i> View</a>
-                                    <a href="/project-study/rate.php?resto_id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-warning"><i class="fas fa-star"></i> Rate</a>
+                                    <a href="restaurant-details.php?id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-modern btn-modern-primary"><i class="fas fa-map-marker-alt"></i> View</a>
+                                    <a href="/project-study/rate.php?resto_id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-modern btn-modern-warning"><i class="fas fa-star"></i> Rate</a>
                                 </div>
                             </div>
                             <?php
                             $active = false;
                         }
                     } else {
-                        echo "<p>No recommendations available.</p>";
+                        echo "<p class='text-center'>No recommendations available.</p>";
                     }
                     ?>
                 </div>
@@ -227,48 +141,67 @@ include '../includes/nav_footer.php';
         </div>
     </div>
 
+    <!-- About Section -->
+    <div class="about-section text-center py-5" style="background: linear-gradient(45deg, #00d4ff, #007bff); color: white; border-radius: 10px; margin: 20px;">
+        <h2>About Our Restaurants</h2>
+        <p>Explore a variety of dining options in Candon City, from local delicacies to international cuisines. Our restaurants are committed to providing exceptional service and unforgettable dining experiences.</p>
+    </div>
     <!-- Restaurants Section -->
     <main>
         <div class="container mt-4">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-9">
+                <div class="col-12">
                     <section class="section">
-                        <div class="row justify-content-center">
+                        <div class="row row-cols-1 row-cols-md-4 g-4">
                             <?php
-                            $restaurantQuery = "SELECT resto.id, resto.title, resto.type_of_resto, resto.location, resto.contacts, resto.services, 
-                                                       resto.best_seller_images, resto.resto_image, resto.description, resto.latitude, resto.longitude, 
-                                                       IFNULL(AVG(resto_ratings.rating), 0) AS avg_rating 
+                            $restaurantQuery = "SELECT resto.*, IFNULL(AVG(resto_ratings.rating), 0) AS avg_rating 
                                                 FROM resto 
                                                 LEFT JOIN resto_ratings ON resto.id = resto_ratings.resto_id 
-                                                GROUP BY resto.id"; // Fetch all restaurants with average ratings
+                                                GROUP BY resto.id";
                             $restaurantResult = $conn->query($restaurantQuery);
 
                             if ($restaurantResult->num_rows > 0) {
                                 while ($row = $restaurantResult->fetch_assoc()) {
                                     $imageSrc = (!empty($row['resto_image'])) 
                                         ? "data:image/jpeg;base64," . base64_encode($row['resto_image'])
-                                        : "/project-study/uploads/default-restaurant.jpg"; // Default image
+                                        : "/project-study/uploads/default-restaurant.jpg";
                                     ?>
-                                    <div class="col-md-6 mb-4">
-                                        <div class="card">
-                                            <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="Restaurant Image">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><i class="fas fa-utensils"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
-                                                <p class="card-text"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
-                                                <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <?php echo htmlspecialchars($row['location']); ?></p>
-                                                <p><i class="fas fa-phone"></i> <strong>Contacts:</strong> <?php echo htmlspecialchars($row['contacts']); ?></p>
-                                                <p><i class="fas fa-concierge-bell"></i> <strong>Services:</strong> <?php echo htmlspecialchars($row['services']); ?></p>
-                                                <p><i class="fas fa-star" style="color: #ffc107;"></i> <strong>Average Rating:</strong> <?php echo number_format($row['avg_rating'], 1); ?> / 5</p>
-                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-compass"></i> Get Directions</a>
-                                                <a href="/project-study/home/view_more_resto.php?id=<?php echo $row['id']; ?>" class="btn btn-secondary"><i class="fas fa-eye"></i> View More</a>
-                                                <a href="/project-study/rate.php?resto_id=<?php echo $row['id']; ?>" class="btn btn-warning"><i class="fas fa-star"></i> Rate</a>
+                                    <div class="col">
+                                        <div class="card shadow-sm h-100">
+                                            <img src="<?php echo $imageSrc; ?>" class="card-img-top rounded-top" alt="Restaurant Image" style="height: 200px; object-fit: cover;">
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title text-truncate"><?php echo htmlspecialchars($row['title']); ?></h5>
+                                                <p class="text-muted mb-2"><i class="fa-solid fa-location-dot"></i> <?php echo htmlspecialchars($row['location']); ?></p>
+                                                <p class="mb-3"><i class="fa-solid fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
+                                                <p class="mb-3">
+                                                    <i class="fas fa-star" style="color: #ffc107;"></i> 
+                                                    Overall Rating: <?php echo number_format($row['avg_rating'], 1); ?> / 5
+                                                </p>
+                                                <div class="mt-auto">
+                                                    <a href="/project-study/home/view_more_resto.php?id=<?php echo $row['id']; ?>" 
+                                                       class="btn btn-modern btn-modern-secondary btn-sm w-100 mb-2">
+                                                        <i class="fa-solid fa-eye"></i> View More
+                                                    </a>
+                                                    <a href="/project-study/rate.php?resto_id=<?php echo $row['id']; ?>" 
+                                                       class="btn btn-modern btn-modern-warning btn-sm w-100 mb-2">
+                                                        <i class="fa-solid fa-star"></i> Rate
+                                                    </a>
+                                                    <a href="<?php echo (!empty($row['latitude']) && !empty($row['longitude'])) 
+                                                        ? "https://www.google.com/maps/dir/?api=1&destination={$row['latitude']},{$row['longitude']}" 
+                                                        : '#'; ?>" 
+                                                        target="_blank" 
+                                                        class="btn btn-modern btn-modern-primary btn-sm w-100" 
+                                                        <?php if (empty($row['latitude']) || empty($row['longitude'])) echo 'disabled'; ?>>
+                                                        <i class="fas fa-compass"></i> Get Directions
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <?php
                                 }
                             } else {
-                                echo "<p>No restaurants found.</p>";
+                                echo "<p class='text-center'>No restaurants found.</p>";
                             }
                             ?>
                         </div>
@@ -279,34 +212,9 @@ include '../includes/nav_footer.php';
     </main>
 
     <?php renderFooter(); ?>
-    <!-- Scripts -->
+
     <script src="restaurants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-    // Add functionality for "View More" button
-    document.querySelectorAll('.view-more-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const restoId = this.getAttribute('data-resto-id');
-            // Fetch and display all details for the selected restaurant
-            alert('Displaying more details for restaurant ID: ' + restoId);
-            // You can replace this alert with a modal or a new page to show full details
-        });
-    });
-
-
-
-    // Handle form submission for rating
-    document.getElementById('rateRestaurantForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-
-        fetch('submit-rating.php', {
-            method: 'POST',
-            body: formData
-        })
-  
-    });
-    </script>
 </body>
 </html>
 

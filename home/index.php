@@ -31,15 +31,32 @@ include '../includes/nav_footer.php';
 </head>
 <body>
     <?php renderNav(); ?>
-    <div class="hero" style="background-image: url('../uploads/home/image-2-1024x724.jpg');">
-        <div class="hero-content">
-            <h1>Candon City: The Tobacco Capital of the Philippines</h1>
-            <p>Where History, Culture, and Progress Meet!</p>
+    <div class="hero" style="background-image: url('../uploads/home/image-2-1024x724.jpg'); position: relative; height: 100vh; background-size: cover; background-position: center;">
+        <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"></div>
+        <div class="hero-content" style="position: relative; z-index: 1; text-align: center; color: #fff; padding: 20px; animation: fadeIn 2s ease-in-out;">
+            <h1 style="font-size: 3rem; font-weight: bold; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);">Candon City: The Tobacco Capital of the Philippines</h1>
+            <p style="font-size: 1.5rem; margin-top: 10px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Where History, Culture, and Progress Meet!</p>
+            <a href="#main" style="margin-top: 20px; display: inline-block; padding: 10px 20px; font-size: 1.2rem; color: #fff; background: #007bff; border-radius: 5px; text-decoration: none; transition: background 0.3s;">Explore Now</a>
         </div>
     </div>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero-content a:hover {
+            background: #0056b3;
+        }
+    </style>
     <main>
         <section class="section">
-            <h2>where to visit</h2>
+            <h2 class="text-center my-4">Where to Visit</h2>
             <div class="slideshow-container">
                 <div class="slides fade">
                     <img src="../uploads/home/1 (1).jpg" alt="Experience">
@@ -98,58 +115,47 @@ include '../includes/nav_footer.php';
         </section>
         
         <section class="section">
-         <h2>Where to Stay</h2>
-             <div id="hotelCarousel" class="carousel slide" data-bs-ride="carousel">
-         <div class="carousel-inner">
-            <?php
-            // Use the existing database connection defined at the top of the file
-
-            $sql = "SELECT * FROM hotels";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                $i = 0;
-                while ($row = $result->fetch_assoc()) {
-                    $i++;
-                    
-                    // Convert BLOB image to Base64
-                    if (!empty($row["img"])) {
-                        $imageData = base64_encode($row["img"]);
-                        $imageSrc = "data:image/jpeg;base64," . $imageData;
+            <h2>Where to Stay</h2>
+            <div id="hotelCarousel" class="carousel slide" data-bs-ride="carousel" style="position: relative;">
+                <div class="carousel-inner">
+                    <?php
+                    $sql = "SELECT * FROM hotels";
+                    $result = $conn->query($sql);
+                    if ($result->num_rows > 0) {
+                        $i = 0;
+                        while ($row = $result->fetch_assoc()) {
+                            $i++;
+                            $imageSrc = !empty($row["img"]) ? "data:image/jpeg;base64," . base64_encode($row["img"]) : "https://via.placeholder.com/300x200?text=No+Image";
+                            echo '<div class="carousel-item ' . ($i === 1 ? 'active' : '') . '">';
+                            echo '    <div class="card" style="border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">';
+                            echo '        <img src="' . $imageSrc . '" class="d-block w-100" alt="Hotel ' . $i . '" style="border-radius: 10px;">';
+                            echo '        <div class="card-body text-center">';
+                            echo '            <h3 class="card-title">' . htmlspecialchars($row["title"]) . '</h3>';
+                            echo '            <p class="card-text">' . htmlspecialchars($row["description"]) . '</p>';
+                            echo '            <a href="../hotels/hotels.php" class="btn btn-primary">More Details</a>';
+                            echo '        </div>';
+                            echo '    </div>';
+                            echo '</div>';
+                        }
                     } else {
-                        $imageSrc = "https://via.placeholder.com/300x200?text=No+Image";
+                        echo '<p class="text-center">No hotels found.</p>';
                     }
-                    
-                    echo '<div class="carousel-item ' . ($i === 1 ? 'active' : '') . '">';
-                    echo '    <div class="card">';
-                    echo '        <img src="' . $imageSrc . '" alt="Hotel ' . $i . '">';
-                    echo '        <div class="card-content">';
-                    echo '            <h3>' . htmlspecialchars($row["title"]) . '</h3>';
-                    echo '            <p>' . htmlspecialchars($row["description"]) . '</p>';
-                    echo '            <a href="../hotels/hotels.php">More Details</a>';
-                    echo '        </div>';
-                    echo '    </div>';
-                    echo '</div>';
-                }
-            } else {
-                echo '<p>No hotels found.</p>';
-            }
-            ?>
-        </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#hotelCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#hotelCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-</section>
+                    ?>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#hotelCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#hotelCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
 
         <section class="section">
             <h2>Where to Eat</h2>
-            <div id="restaurantCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div id="restaurantCarousel" class="carousel slide" data-bs-ride="carousel" style="position: relative;">
                 <div class="carousel-inner">
                     <?php
                     $sql = "SELECT * FROM resto";
@@ -158,32 +164,23 @@ include '../includes/nav_footer.php';
                         $i = 0;
                         while ($row = $result->fetch_assoc()) {
                             $i++;
-                            
-                            // Convert BLOB image to Base64
-                            if (!empty($row["img"])) {
-                                $imageData = base64_encode($row["img"]);
-                                $imageSrc = "data:image/jpeg;base64," . $imageData;
-                            } else {
-                                $imageSrc = "https://via.placeholder.com/300x200?text=No+Image";
-                            }
-                            
+                            $imageSrc = !empty($row["img"]) ? "data:image/jpeg;base64," . base64_encode($row["img"]) : "https://via.placeholder.com/300x200?text=No+Image";
                             echo '<div class="carousel-item ' . ($i === 1 ? 'active' : '') . '">';
-                            echo '    <div class="card">';
-                            echo '        <img src="' . $imageSrc . '" alt="Restaurant ' . $i . '">';
-                            echo '        <div class="card-content">';
-                            echo '            <h3>' . htmlspecialchars($row["title"]) . '</h3>';
-                            echo '            <p>' . htmlspecialchars($row["description"]) . '</p>';
-                            echo '            <a href="#">More Details</a>';
+                            echo '    <div class="card" style="border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">';
+                            echo '        <img src="' . $imageSrc . '" class="d-block w-100" alt="Restaurant ' . $i . '" style="border-radius: 10px;">';
+                            echo '        <div class="card-body text-center">';
+                            echo '            <h3 class="card-title">' . htmlspecialchars($row["title"]) . '</h3>';
+                            echo '            <p class="card-text">' . htmlspecialchars($row["description"]) . '</p>';
+                            echo '            <a href="#" class="btn btn-primary">More Details</a>';
                             echo '        </div>';
                             echo '    </div>';
                             echo '</div>';
                         }
                     } else {
-                        echo '<p>No restaurants found.</p>';
+                        echo '<p class="text-center">No restaurants found.</p>';
                     }
                     ?>
                 </div>
-
                 <button class="carousel-control-prev" type="button" data-bs-target="#restaurantCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
@@ -194,53 +191,46 @@ include '../includes/nav_footer.php';
                 </button>
             </div>
         </section>
-            <section class="section">
-                <h2>Where to Attend Events</h2>
-                <div id="eventCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <?php
-                        $sql = "SELECT * FROM events";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-                            $i = 0;
-                            while ($row = $result->fetch_assoc()) {
-                                $i++;
-                                
-                                // Convert BLOB image to Base64
-                                if (!empty($row["img"])) {
-                                    $imageData = base64_encode($row["img"]);
-                                    $imageSrc = "data:image/jpeg;base64," . $imageData;
-                                } else {
-                                    $imageSrc = "https://via.placeholder.com/300x200?text=No+Image";
-                                }
-                                
-                                echo '<div class="carousel-item ' . ($i === 1 ? 'active' : '') . '">';
-                                echo '    <div class="card">';
-                                echo '        <img src="' . $imageSrc . '" alt="Event ' . $i . '">';
-                                echo '        <div class="card-content">';
-                                echo '            <h3>' . htmlspecialchars($row["title"]) . '</h3>';
-                                echo '            <p>' . htmlspecialchars($row["description"]) . '</p>';
-                                echo '            <a href="#">More Details</a>';
-                                echo '        </div>';
-                                echo '    </div>';
-                                echo '</div>';
-                            }
-                        } else {
-                            echo '<p>No events found.</p>';
-                        }
-                        ?>
-                    </div>
 
-                    <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+        <section class="section">
+            <h2>Where to Attend Events</h2>
+            <div id="eventCarousel" class="carousel slide" data-bs-ride="carousel" style="position: relative;">
+                <div class="carousel-inner">
+                    <?php
+                    $sql = "SELECT * FROM events";
+                    $result = $conn->query($sql);
+                    if ($result->num_rows > 0) {
+                        $i = 0;
+                        while ($row = $result->fetch_assoc()) {
+                            $i++;
+                            $imageSrc = !empty($row["img"]) ? "data:image/jpeg;base64," . base64_encode($row["img"]) : "https://via.placeholder.com/300x200?text=No+Image";
+                            echo '<div class="carousel-item ' . ($i === 1 ? 'active' : '') . '">';
+                            echo '    <div class="card" style="border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">';
+                            echo '        <img src="' . $imageSrc . '" class="d-block w-100" alt="Event ' . $i . '" style="border-radius: 10px;">';
+                            echo '        <div class="card-body text-center">';
+                            echo '            <h3 class="card-title">' . htmlspecialchars($row["title"]) . '</h3>';
+                            echo '            <p class="card-text">' . htmlspecialchars($row["description"]) . '</p>';
+                            echo '            <a href="#" class="btn btn-primary">More Details</a>';
+                            echo '        </div>';
+                            echo '    </div>';
+                            echo '</div>';
+                        }
+                    } else {
+                        echo '<p class="text-center">No events found.</p>';
+                    }
+                    ?>
                 </div>
-            </section>
+                <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
+
         <section class="contact">
             <h2>Contact Us</h2>
             <div class="social-links">

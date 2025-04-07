@@ -13,13 +13,13 @@ if ($conn->connect_error) {
 }
 
 // Fetch historical tourist sites from the database
-$siteQuery = "SELECT id, title, description, img, latitude, longitude, location FROM histo ORDER BY title ASC"; // Updated table
+$siteQuery = "SELECT id, title, description, img, latitude, longitude, location FROM experience ORDER BY title ASC"; // Updated table
 $siteResult = $conn->query($siteQuery);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Historical Tourist Sites - CandonXplore</title>
+    <title>Experience Program - CandonXplore</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -232,12 +232,12 @@ $siteResult = $conn->query($siteQuery);
                                 Attractions
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
-                                <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php">Recreational Facilities</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php">Livelihoods</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/ancestral_houses.php">Ancestral Houses</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/experienceprogram.php">Experience Program</a></li>
+                                <li><a class="dropdown-item" href="../pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
+                                <li><a class="dropdown-item" href="../pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
+                                <li><a class="dropdown-item" href="../pages/recreational-facilities.php">Recreational Facilities</a></li>
+                                <li><a class="dropdown-item" href="../pages/livelihoods.php">Livelihoods</a></li>
+                                <li><a class="dropdown-item" href="../pages/ancestral_houses.php">Ancestral Houses</a></li>
+                                <li><a class="dropdown-item" href="../pages/experienceprogram.php">Experience Program</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -265,16 +265,16 @@ $siteResult = $conn->query($siteQuery);
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
         <div class="hero-content">
-            <h1>Explore Historical Sites</h1>
-            <p>Discover the rich history and culture of Candon City! 🏛️📜</p>
+            <h1>Explore Unique Experiences</h1>
+            <p>Engage in exciting programs and activities in Candon City! 🌟🎉</p>
         </div>
     </div>
 
     <!-- Where to Stay Section (Top) -->
     <div class="container-fluid mt-4">
         <div class="where-to-stay">
-            <h2>Historical Tourist Sites in Candon City</h2>
-            <p>Explore the landmarks that define the city's heritage.</p>
+            <h2>Experience Programs in Candon City</h2>
+            <p>Participate in activities that showcase the city's vibrant culture and traditions.</p>
         </div>
     </div>
 
@@ -309,7 +309,7 @@ $siteResult = $conn->query($siteQuery);
                                     <?php
                                 }
                             } else {
-                                echo "<p>No historical sites found.</p>";
+                                echo "<p>No experience programs found.</p>";
                             }
                             ?>
                         </div>

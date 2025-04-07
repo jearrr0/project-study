@@ -12,9 +12,17 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch ancestral houses from the database
-$siteQuery = "SELECT id, title, description, location, img, latitude, longitude FROM ancestral_house ORDER BY title ASC";
-$siteResult = $conn->query($siteQuery);
+// Fetch ancestral houses from the database with search functionality
+$searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
+$siteQuery = "SELECT id, title, description, img, latitude, longitude 
+              FROM ancestral_houses 
+              WHERE title LIKE ? OR description LIKE ? 
+              ORDER BY title ASC";
+$stmt = $conn->prepare($siteQuery);
+$searchTerm = '%' . $searchQuery . '%';
+$stmt->bind_param("ss", $searchTerm, $searchTerm);
+$stmt->execute();
+$siteResult = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,12 +62,12 @@ $siteResult = $conn->query($siteQuery);
                                 Attractions
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
-                                <li><a class="dropdown-item" href="../attractions/pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/recreational-facilities.php">Recreational Facilities</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/livelihoods.php">Livelihoods</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/ancestral_houses.php">Ancestral Houses</a></li>
-                                <li><a class="dropdown-item" href="../attractions/pages/experienceprogram.php">Experience Program</a></li>
+                                <li><a class="dropdown-item" href="../pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
+                                <li><a class="dropdown-item" href="../pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
+                                <li><a class="dropdown-item" href="../pages/recreational-facilities.php">Recreational Facilities</a></li>
+                                <li><a class="dropdown-item" href="../pages/livelihoods.php">Livelihoods</a></li>
+                                <li><a class="dropdown-item" href="../pages/ancestral_houses.php">Ancestral Houses</a></li>
+                                <li><a class="dropdown-item" href="../pages/experienceprogram.php">Experience Program</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -75,8 +83,8 @@ $siteResult = $conn->query($siteQuery);
                             <a class="nav-link" href="/project-study/profile/login.php">Profile</a>
                         </li>
                     </ul>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <form class="d-flex mt-3" role="search" method="get" action="">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" value="<?php echo htmlspecialchars($searchQuery); ?>">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -176,6 +184,8 @@ $siteResult = $conn->query($siteQuery);
 </body>
 </html>
 <?php
+// Close the prepared statement
+$stmt->close();
 // Close the database connection
 $conn->close();
 ?>
