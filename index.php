@@ -88,7 +88,7 @@
         <i class="bi bi-geo-alt icon"></i>
         <h1>Welcome to CandonXplore</h1>
         <p>Discover the beauty and attractions of Candon City. Your adventure starts here!</p>
-        <a href="home/index.php" class="btn"><i class="bi bi-arrow-right-circle"></i> Enter Site</a>
+        <a href="/project-study/main/home.php" class="btn"><i class="bi bi-arrow-right-circle"></i> Enter Site</a>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -17,7 +17,7 @@ $hotelId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($hotelId > 0) {
     // Fetch hotel details
-    $sql = "SELECT id, title, description, location, contact_number, email, rooms, type, nearby_places, amenities_facilities, img, latitude, longitude, website_link FROM hotels WHERE id = ?";
+    $sql = "SELECT id, title, description, location, contact_number, email, rooms, type, nearby_places, amenities_facilities, img, latitude, longitude FROM hotels WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $hotelId);
     $stmt->execute();
@@ -162,25 +162,7 @@ $conn->close();
             <p><i class="bi bi-map"></i> <strong>Nearby Places:</strong> <?php echo htmlspecialchars($hotel['nearby_places']); ?></p>
             <p><i class="bi bi-list-check"></i> <strong>Amenities & Facilities:</strong> <?php echo htmlspecialchars($hotel['amenities_facilities']); ?></p>
             <div class="social-icons mt-3">
-                <?php 
-                if (!empty($hotel['website_link'])) {
-                    $links = explode(',', $hotel['website_link']);
-                    foreach ($links as $link) {
-                        $trimmedLink = trim($link);
-                        if (strpos($trimmedLink, 'facebook.com') !== false) {
-                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-facebook'></i></a>";
-                        } elseif (strpos($trimmedLink, 'instagram.com') !== false) {
-                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-instagram'></i></a>";
-                        } elseif (strpos($trimmedLink, 'google.com') !== false) {
-                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-google'></i></a>";
-                        } else {
-                            echo "<a href='" . htmlspecialchars($trimmedLink) . "' target='_blank'><i class='bi bi-link-45deg'></i></a>";
-                        }
-                    }
-                } else {
-                    echo "<p>No website links available.</p>";
-                }
-                ?>
+                <p>No website links available.</p>
             </div>
             <div class="text-center mt-4">
                 <a href="/project-study/hotels/hotels.php" class="btn btn-primary">

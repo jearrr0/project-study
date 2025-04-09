@@ -39,3 +39,13 @@ footer {
 footer p {
     margin: 5px 0;
 }
+
+.offcanvas-body {
+    text-align: center; /* Center align menu items */
+}
+
+.offcanvas-body .navbar-nav {
+    display: flex;
+    flex-direction: column; /* Stack menu items vertically */
+    align-items: center; /* Center items horizontally */
+}

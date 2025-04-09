@@ -34,39 +34,7 @@ function getImageData($file) {
 $editData = null; // Variable to hold data for editing
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['import'])) {
-        // Import CSV logic
-        if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {
-            $file = fopen($_FILES['csv_file']['tmp_name'], 'r');
-            while (($data = fgetcsv($file)) !== false) {
-                $sql = "INSERT INTO ancestral_house (title, description, location, img, latitude, longitude) 
-                        VALUES (?, ?, ?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE 
-                        description = VALUES(description), 
-                        location = VALUES(location), 
-                        img = VALUES(img), 
-                        latitude = VALUES(latitude), 
-                        longitude = VALUES(longitude)";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sssbdd", $data[0], $data[1], $data[2], $data[3], $data[4], $data[5]);
-                $stmt->execute();
-            }
-            fclose($file);
-            echo "<script>alert('Data imported successfully!');</script>";
-        }
-    } elseif (isset($_POST['export'])) {
-        // Export CSV logic
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment;filename=ancestral_houses.csv');
-        $output = fopen('php://output', 'w');
-        fputcsv($output, ['Title', 'Description', 'Location', 'Image', 'Latitude', 'Longitude']);
-        $result = $conn->query("SELECT * FROM ancestral_house");
-        while ($row = $result->fetch_assoc()) {
-            fputcsv($output, $row);
-        }
-        fclose($output);
-        exit;
-    } elseif (isset($_POST['delete'])) {
+    if (isset($_POST['delete'])) {
         // Delete logic
         $id = $_POST['id'];
         $sql = "DELETE FROM ancestral_house WHERE id = ?";
@@ -225,17 +193,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" name="<?php echo $editData ? 'update' : 'add'; ?>">
                 <?php echo $editData ? 'Update Ancestral House' : 'Add Ancestral House'; ?>
             </button>
-        </form>
-
-        <!-- Import CSV -->
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="csv_file" accept=".csv" required>
-            <button type="submit" name="import">Import CSV</button>
-        </form>
-
-        <!-- Export CSV -->
-        <form method="POST">
-            <button type="submit" name="export">Export CSV</button>
         </form>
 
         <!-- Display Records -->

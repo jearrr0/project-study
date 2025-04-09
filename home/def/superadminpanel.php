@@ -4,37 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Superadmin Panel | CandonXplore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            display: flex;
             height: 100vh;
             background: linear-gradient(to right, #1e3c72, #2a5298);
             color: white;
         }
         .sidebar {
-            width: 250px;
+            height: 100vh;
             background: #182848;
-            display: flex;
-            flex-direction: column;
             padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
         }
         .sidebar h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 22px;
             color: #ff9800;
+            font-size: 22px;
+            margin-bottom: 20px;
         }
         .sidebar a {
             text-decoration: none;
             color: white;
-            padding: 10px 15px;
-            margin: 5px 0;
-            border-radius: 5px;
             display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
             transition: 0.3s;
         }
         .sidebar a:hover {
@@ -42,37 +44,40 @@
             color: #182848;
         }
         .main-content {
-            flex: 1;
+            margin-left: 270px;
             padding: 20px;
-            overflow-y: auto;
+            transition: margin-left 0.3s ease-in-out;
         }
-        .main-content h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
+        .toggle-sidebar {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #ff9800;
+            color: #182848;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            z-index: 1000;
         }
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
-        }
-        .card h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .card p {
-            font-size: 16px;
-        }
-        .chart-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .toggle-sidebar {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
+    <button class="toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar">
         <h2>Superadmin Panel</h2>
         <a href="ancestralform.php">Ancestral House</a>
@@ -102,6 +107,10 @@
         </div>
     </div>
     <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
         const ctx = document.getElementById('accountsChart').getContext('2d');
         const accountsChart = new Chart(ctx, {
             type: 'bar',

@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/project-study/home/index.php">
+                        <a class="nav-link active" aria-current="page" href="/project-study/main/home.php">
                             <i class="bi bi-house-door"></i> Home
                         </a>
                     </li>

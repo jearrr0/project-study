@@ -12,200 +12,30 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch historical tourist sites from the database
-$siteQuery = "SELECT id, title, description, img, latitude, longitude, location FROM experience ORDER BY title ASC"; // Updated table
-$siteResult = $conn->query($siteQuery);
+// Fetch experience programs from the database with search functionality
+$searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
+$programQuery = "SELECT id, title, description, img, location, latitude, longitude 
+                 FROM experience
+                 WHERE title LIKE ? OR description LIKE ? 
+                 ORDER BY title ASC";
+$stmt = $conn->prepare($programQuery);
+$searchTerm = '%' . $searchQuery . '%';
+$stmt->bind_param("ss", $searchTerm, $searchTerm);
+$stmt->execute();
+$programResult = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Experience Program - CandonXplore</title>
+    <title>Experience Programs - CandonXplore</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome -->
-
     <style>
-    /* General card styling */
-    .card {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Image adjustments */
-    .card-img-top {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-    }
-
-    /* Card body layout */
-    .card-body {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 15px;
-    }
-
-    .card-title {
-        font-size: 1.4rem;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .card-text {
-        font-size: 0.9rem;
-        color: #555;
-    }
-
-    /* Contact details */
-    .hotel-contact {
-        font-size: 0.85rem;
-        color: #777;
-        margin-top: 10px;
-    }
-
-    /* Buttons */
-    .btn {
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 0.9rem;
-    }
-
-    /* Amenities */
-    .amenities {
-        font-size: 0.9rem;
-        color: #444;
-        margin-top: 10px;
-        font-weight: 500;
-    }
-
-    /* Location text */
-    .location {
-        font-size: 0.9rem;
-        color: #007bff;
-        font-weight: 600;
-    }
-
-    /* Nearby places */
-    .nearby {
-        font-size: 0.85rem;
-        color: #666;
-        font-style: italic;
-        margin-top: 5px;
-    }
-
-    /* Recommended events carousel styling */
-    .recommendation-section {
-        text-align: center;
-        margin-bottom: 20px;
-        width: 100%;
-    }
-
-    .recommendation-card img {
-        max-height: 200px;
-        object-fit: cover;
-        width: 100%;
-    }
-
-    .recommendation-card h6 {
-        font-size: 1rem;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-
-    .recommendation-card p {
-        font-size: 0.85rem;
-        color: #555;
-    }
-
-    .recommendation-card .btn {
-        font-size: 0.8rem;
-        padding: 5px 10px;
-    }
-
-    /* Where to Stay Section Styling */
-    .where-to-stay {
-        text-align: center;
-        margin-top: 30px;
-        padding: 20px;
-        background: linear-gradient(135deg, #007bff, #00c6ff);
-        color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .where-to-stay:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .where-to-stay h2 {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .where-to-stay p {
-        font-size: 1rem;
-        margin: 0;
-    }
-
-    /* Add colors to icons */
-    .card-body i {
-        color: #007bff; /* Primary color for icons */
-    }
-
-    .recommendation-card i {
-        color: #ff9800; /* Orange for recommendation icons */
-    }
-
-    /* Button colors */
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        border-color: #5a6268;
-    }
-
-    .btn-warning {
-        background-color: #ffc107;
-        border-color: #ffc107;
-    }
-
-    .btn-warning:hover {
-        background-color: #e0a800;
-        border-color: #e0a800;
-    }
-</style>
-
-    
+        /* Add your styles here */
+    </style>
 </head>
 <body>
 <nav class="navbar bg-body-tertiary fixed-top">
@@ -225,7 +55,7 @@ $siteResult = $conn->query($siteQuery);
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/project-study/home/index.php">Home</a>
+                              <a class="nav-link" href="/project-study/main/home.php">Home</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -253,8 +83,8 @@ $siteResult = $conn->query($siteQuery);
                             <a class="nav-link" href="/project-study/profile/login.php">Profile</a>
                         </li>
                     </ul>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <form class="d-flex mt-3" role="search" method="get" action="">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" value="<?php echo htmlspecialchars($searchQuery); ?>">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -263,65 +93,71 @@ $siteResult = $conn->query($siteQuery);
     </nav>
 
     <!-- Hero Section -->
-    <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
+    <div class="hero" style="background-image: url('/project-study/uploads/home/experience-hero.jpg');">
         <div class="hero-content">
-            <h1>Explore Unique Experiences</h1>
-            <p>Engage in exciting programs and activities in Candon City! 🌟🎉</p>
+            <h1>Experience Programs</h1>
+            <p>Engage in unique cultural and recreational activities in Candon City! 🌟</p>
         </div>
     </div>
 
-    <!-- Where to Stay Section (Top) -->
-    <div class="container-fluid mt-4">
-        <div class="where-to-stay">
-            <h2>Experience Programs in Candon City</h2>
-            <p>Participate in activities that showcase the city's vibrant culture and traditions.</p>
-        </div>
-    </div>
-
-    <!-- Historical Sites Section -->
+    <!-- Experience Programs Section -->
     <main>
-        <div class="container mt-4">
-            <div class="row justify-content-center">
-                <!-- Single Column Site Display -->
-                <div class="col-12 col-md-9">
-                    <section class="section">
-                        <div class="row">
-                            <?php
-                            if ($siteResult->num_rows > 0) {
-                                while ($row = $siteResult->fetch_assoc()) {
-                                    $imageSrc = (!empty($row['img'])) 
-                                        ? "data:image/jpeg;base64," . base64_encode($row['img'])
-                                        : "/project-study/uploads/default-site.jpg"; // Default image
-                                    $location = !empty($row['location']) ? htmlspecialchars($row['location']) : "Location not specified"; // Fallback for missing location
-                                    ?>
-                                    <div class="col-12 mb-4">
-                                        <div class="card">
-                                            <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="Site Image">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><i class="fas fa-landmark"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
-                                                <p class="card-text"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
-                                                <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <?php echo $location; ?></p>
-                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?php echo $row['latitude']; ?>,<?php echo $row['longitude']; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-compass"></i> Get Directions</a>
-                                                <a href="site-details.php?id=<?php echo $row['id']; ?>" class="btn btn-secondary mt-2"><i class="fas fa-info-circle"></i> View More</a> <!-- View More Button -->
+        <!-- Title Section -->
+        <section class="text-center py-3" style="background-color: lightgreen;">
+            <div class="container">
+            <h3 class="fw-bold">Experience Programs</h3>
+            <p class="text-muted">Discover activities that bring you closer to the heart of Candon City.</p>
+            </div>
+        </section>
+        
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <section class="section">
+                    <div class="row g-4">
+                        <?php
+                        if ($programResult->num_rows > 0) {
+                            while ($row = $programResult->fetch_assoc()) {
+                                $imageSrc = (!empty($row['img'])) 
+                                    ? "data:image/jpeg;base64," . base64_encode($row['img'])
+                                    : "/project-study/uploads/default-program.jpg"; // Default image
+                                $location = !empty($row['location']) ? htmlspecialchars($row['location']) : "Location not specified"; // Fallback for missing location
+                                ?>
+                                <div class="col-12">
+                                    <div class="card shadow-sm h-100">
+                                        <img src="<?php echo $imageSrc; ?>" class="card-img-top img-fluid" alt="Program Image" style="height: auto; max-height: 200px; object-fit: cover;">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title text-primary"><i class="fas fa-star"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
+                                            <p class="card-text text-muted"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
+                                            <p class="mt-auto"><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <?php echo $location; ?></p>
+                                            <div class="d-grid gap-2 mt-3">
+                                                <a href="<?php echo (!empty($row['latitude']) && !empty($row['longitude'])) 
+                                                    ? "https://www.google.com/maps/dir/?api=1&destination={$row['latitude']},{$row['longitude']}" 
+                                                    : '#'; ?>" 
+                                                    target="_blank" 
+                                                    class="btn btn-modern btn-modern-primary btn-lg w-100" 
+                                                    <?php if (empty($row['latitude']) || empty($row['longitude'])) echo 'disabled'; ?>>
+                                                    <i class="fas fa-compass"></i> Get Directions
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
-                                    <?php
-                                }
-                            } else {
-                                echo "<p>No experience programs found.</p>";
+                                </div>
+                                <?php
                             }
-                            ?>
-                        </div>
-                    </section>
-                </div>
+                        } else {
+                            echo "<p class='text-center text-muted'>No experience programs found.</p>";
+                        }
+                        ?>
+                    </div>
+                </section>
             </div>
         </div>
-    </main>
-
-    <footer style="display: flex; justify-content: space-around; align-items: center; padding: 20px; background-color: #f8f9fa; color: black;">
+    </div>
+</main>
+<footer style="display: flex; justify-content: space-around; align-items: center; padding: 20px; background-color: #f8f9fa; color: black;">
     <div style="text-align: center; flex: 1;">
-        <img src="../uploads/Coat_of_arms_of_the_Philippines.svg.png" alt="Philippine Coat of Arms" style="width: 100px;">
+    <img src="/project-study/uploads/Coat_of_arms_of_the_Philippines.svg.png" alt="Philippine Coat of Arms" style="width: 100px;">
         <p><strong>REPUBLIC OF THE PHILIPPINES</strong></p>
         <p>All content is in the public domain unless otherwise stated.</p>
         <p><a href="#" style="color: black;">Privacy Policy</a></p>
@@ -348,10 +184,14 @@ $siteResult = $conn->query($siteQuery);
         </p>
     </div>
 </footer>
+    <!-- Scripts -->
+    <script src="experience-programs.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 <?php
+// Close the prepared statement
+$stmt->close();
 // Close the database connection
 $conn->close();
 ?>

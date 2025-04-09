@@ -56,6 +56,7 @@ include '../includes/nav_footer.php';
         }
     </style>
     <main>
+       
         <section class="section">
             <h2 class="text-center my-4">Where to Visit</h2>
             <div class="slideshow-container">
@@ -127,7 +128,7 @@ include '../includes/nav_footer.php';
                         $i = 0;
                         while ($row = $result->fetch_assoc()) {
                             $i++;
-                            $imageSrc = !empty($row["img"]) ? "data:image/jpeg;base64," . base64_encode($row["img"]) : "https://via.placeholder.com/300x200?text=No+Image";
+                            $imageSrc = !empty($row["img"]) ? "data:image/png;base64," . base64_encode($row["img"]) : "https://via.placeholder.com/300x200?text=No+Image";
                             echo '<div class="carousel-item ' . ($i === 1 ? 'active' : '') . '">';
                             echo '    <div class="card" style="border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">';
                             echo '        <img src="' . $imageSrc . '" class="d-block w-100" alt="Hotel ' . $i . '" style="border-radius: 10px;">';

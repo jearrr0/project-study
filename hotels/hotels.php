@@ -13,11 +13,11 @@ if ($conn->connect_error) {
 }
 
 // Fetch hotels from the database
-$sql = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating 
+$sql = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating, COUNT(hotel_ratings.rating) AS rating_count 
         FROM hotels 
         LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
         GROUP BY hotels.id 
-        ORDER BY RAND() LIMIT 3"; // Fetch 3 random hotels with average ratings for recommendations
+        ORDER BY RAND() LIMIT 3"; // Fetch 3 random hotels with average ratings and rating count
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -102,51 +102,119 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <!-- Recommendations (Carousel) -->
+    <!-- Recommendations (High Avg Rate and Must Try Low Rate) -->
     <div class="container-fluid mt-4">
-        <div class="recommendation-section">
-            <h4 class="text-center">Recommended Hotels</h4>
-            <div id="recommendedHotelsCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <?php
-                    if ($result->num_rows > 0) {
-                        $active = true;
-                        while ($recRow = $result->fetch_assoc()) {
-                            $recImageSrc = (!empty($recRow['img'])) 
-                                ? "data:image/jpeg;base64," . base64_encode($recRow['img'])
-                                : "/project-study/uploads/default-hotel.jpg"; // Default image
-                            ?>
-                            <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
-                                <div class="recommendation-card text-center mx-auto" style="max-width: 600px;">
-                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid rounded" alt="Recommended Hotel Image" style="max-height: 300px; object-fit: cover;">
-                                    <h6 class="mt-3"><?php echo htmlspecialchars($recRow['title']); ?></h6>
-                                    <p><?php echo htmlspecialchars($recRow['location']); ?></p>
-                                    <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($recRow['avg_rating'], 1); ?> / 5</p>
-                                    <a href="/project-study/home/view_more_hotels.php?id=<?php echo $recRow['id']; ?>" 
-                                       class="btn btn-modern btn-modern-primary btn-sm mt-2">
-                                        <i class="fa-solid fa-eye"></i> View More
-                                    </a>
-                                </div>
-                            </div>
+        <div class="row">
+            <!-- High Average Rating Section -->
+            <div class="col-md-6">
+                <div class="recommendation-section">
+                    <h4 class="text-center">Highly Rated Hotels</h4>
+                    <div id="highAvgRateCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
                             <?php
-                            $active = false;
-                        }
-                    } else {
-                        echo "<p class='text-center'>No recommendations available.</p>";
-                    }
-                    ?>
+                            $highRateQuery = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating, COUNT(hotel_ratings.rating) AS rating_count 
+                                              FROM hotels 
+                                              LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+                                              GROUP BY hotels.id 
+                                              ORDER BY avg_rating DESC LIMIT 3"; // Top 3 highly rated hotels with rating count
+                            $highRateResult = $conn->query($highRateQuery);
+
+                            if ($highRateResult->num_rows > 0) {
+                                $active = true;
+                                while ($highRow = $highRateResult->fetch_assoc()) {
+                                    $highImageSrc = (!empty($highRow['img'])) 
+                                        ? "data:image/jpeg;base64," . base64_encode($highRow['img'])
+                                        : "/project-study/uploads/default-hotel.jpg"; // Default image
+                                    ?>
+                                    <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+                                        <div class="recommendation-card text-center mx-auto" style="max-width: 600px;">
+                                            <img src="<?php echo $highImageSrc; ?>" class="img-fluid rounded" alt="Highly Rated Hotel Image" style="width: 100%; height: 300px; object-fit: cover;">
+                                            <h6 class="mt-3"><?php echo htmlspecialchars($highRow['title']); ?></h6>
+                                            <p><?php echo htmlspecialchars($highRow['location']); ?></p>
+                                            <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($highRow['avg_rating'], 1); ?> / 5</p>
+                                            <p><?php echo $highRow['rating_count']; ?> user(s) rated this hotel</p>
+                                            <a href="/project-study/home/view_more_hotels.php?id=<?php echo $highRow['id']; ?>" 
+                                               class="btn btn-modern btn-modern-primary btn-sm mt-2">
+                                                <i class="fa-solid fa-eye"></i> View More
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $active = false;
+                                }
+                            } else {
+                                echo "<p class='text-center'>No highly rated hotels available.</p>";
+                            }
+                            ?>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#highAvgRateCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#highAvgRateCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#recommendedHotelsCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#recommendedHotelsCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+            </div>
+
+            <!-- Must Try Low Rate Section -->
+            <div class="col-md-6">
+                <div class="recommendation-section">
+                    <h4 class="text-center">Must Try Budget Hotels</h4>
+                    <div id="lowRateCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <?php
+                            $lowRateQuery = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating, COUNT(hotel_ratings.rating) AS rating_count 
+                                             FROM hotels 
+                                             LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+                                             GROUP BY hotels.id 
+                                             ORDER BY avg_rating ASC LIMIT 3"; // Top 3 low-rated hotels with rating count
+                            $lowRateResult = $conn->query($lowRateQuery);
+
+                            if ($lowRateResult->num_rows > 0) {
+                                $active = true;
+                                while ($lowRow = $lowRateResult->fetch_assoc()) {
+                                    $lowImageSrc = (!empty($lowRow['img'])) 
+                                        ? "data:image/jpeg;base64," . base64_encode($lowRow['img'])
+                                        : "/project-study/uploads/default-hotel.jpg"; // Default image
+                                    ?>
+                                    <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+                                        <div class="recommendation-card text-center mx-auto" style="max-width: 600px;">
+                                            <img src="<?php echo $lowImageSrc; ?>" class="img-fluid rounded" alt="Budget Hotel Image" style="width: 100%; height: 300px; object-fit: cover;">
+                                            <h6 class="mt-3"><?php echo htmlspecialchars($lowRow['title']); ?></h6>
+                                            <p><?php echo htmlspecialchars($lowRow['location']); ?></p>
+                                            <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($lowRow['avg_rating'], 1); ?> / 5</p>
+                                            <p><?php echo $lowRow['rating_count']; ?> user(s) rated this hotel</p>
+                                            <a href="/project-study/home/view_more_hotels.php?id=<?php echo $lowRow['id']; ?>" 
+                                               class="btn btn-modern btn-modern-primary btn-sm mt-2">
+                                                <i class="fa-solid fa-eye"></i> View More
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $active = false;
+                                }
+                            } else {
+                                echo "<p class='text-center'>No budget hotels available.</p>";
+                            }
+                            ?>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#lowRateCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#lowRateCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 
         <!-- Where to Stay Section (Bottom) -->
         <div class="container-fluid mt-4">
@@ -155,6 +223,7 @@ $result = $conn->query($sql);
                 <p>Discover the best accommodations and enjoy your stay in the heart of Candon City.</p>
             </div>
         </div>
+
 
     <!-- Hotels & Recommendations Section -->
     <main>
@@ -166,10 +235,11 @@ $result = $conn->query($sql);
                         <div class="row row-cols-1 row-cols-md-4 g-4">
                             <?php
                             $hotelQuery = "SELECT hotels.id AS hotel_id, hotels.title, hotels.location, hotels.rooms, hotels.img, 
-                                                  hotels.latitude, hotels.longitude, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating 
+                                                  hotels.latitude, hotels.longitude, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating, 
+                                                  COUNT(hotel_ratings.rating) AS rating_count 
                                            FROM hotels 
                                            LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
-                                           GROUP BY hotels.id"; // Explicitly qualify column names
+                                           GROUP BY hotels.id"; // Include rating count in hotel listings
                             $hotelResult = $conn->query($hotelQuery);
 
                             if ($hotelResult->num_rows > 0) {
@@ -191,6 +261,7 @@ $result = $conn->query($sql);
                                                     <i class="fas fa-star" style="color: #ffc107;"></i> 
                                                     Overall Rating: <?php echo number_format($row['avg_rating'], 1); ?> / 5
                                                 </p>
+                                                <p class="mb-3"><?php echo $row['rating_count']; ?> user(s) rated this hotel</p>
                                                 <div class="mt-auto">
                                                     <a href="/project-study/home/view_more_hotels.php?id=<?php echo $row['hotel_id']; ?>" 
                                                        class="btn btn-modern btn-modern-secondary btn-sm w-100 mb-2">

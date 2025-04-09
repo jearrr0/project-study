@@ -39,58 +39,58 @@ $siteResult = $stmt->get_result();
 </head>
 <body>
 <nav class="navbar bg-body-tertiary fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
-                <span style="font-family: 'Arial', sans-serif; font-weight: bold; font-size: 1.5rem; color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">CandonXplore</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CandonXplore</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/project-study/home/index.php">Home</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Attractions
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
-                                <li><a class="dropdown-item" href="../pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
-                                <li><a class="dropdown-item" href="../pages/recreational-facilities.php">Recreational Facilities</a></li>
-                                <li><a class="dropdown-item" href="../pages/livelihoods.php">Livelihoods</a></li>
-                                <li><a class="dropdown-item" href="../pages/ancestral_houses.php">Ancestral Houses</a></li>
-                                <li><a class="dropdown-item" href="../pages/experienceprogram.php">Experience Program</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="../uploads/home/candon-logo.png" alt="CandonXplore Logo" style="height: 70px; margin-right: 50px;">
+            <span style="font-family: 'Arial', sans-serif; font-weight: bold; font-size: 1.5rem; color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">CandonXplore</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CandonXplore</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/home/index.php">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Attractions
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="attractionsDropdown">
+                            <li><a class="dropdown-item" href="../pages/historical-tourist-sites.php">Historical Tourist Sites</a></li>
+                            <li><a class="dropdown-item" href="../pages/natural_tourist_sites.php">Natural Tourist Sites</a></li>
+                            <li><a class="dropdown-item" href="../pages/recreational-facilities.php">Recreational Facilities</a></li>
+                            <li><a class="dropdown-item" href="../pages/livelihoods.php">Livelihoods</a></li>
+                            <li><a class="dropdown-item" href="../pages/ancestral_houses.php">Ancestral Houses</a></li>
+                            <li><a class="dropdown-item" href="../pages/experienceprogram.php">Experience Program</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/project-study/hotels/hotels.php">Hotels</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/project-study/resto/restaurants.php">Restaurants</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/project-study/events/events.php">Events</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/project-study/profile/login.php">Profile</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex mt-3" role="search" method="get" action="">
-                        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" value="<?php echo htmlspecialchars($searchQuery); ?>">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/resto/restaurants.php">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/events/events.php">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project-study/profile/login.php">Profile</a>
+                    </li>
+                </ul>
+                <form class="d-flex mt-3" role="search" method="get" action="">
+                    <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" value="<?php echo htmlspecialchars($searchQuery); ?>">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- Hero Section -->
     <div class="hero" style="background-image: url('/project-study/uploads/home/image-2-1024x724.jpg');">
@@ -125,7 +125,7 @@ $siteResult = $stmt->get_result();
                                 ?>
                                 <div class="col-12">
                                     <div class="card shadow-sm h-100">
-                                        <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="House Image" style="height: 200px; object-fit: cover;">
+                                        <img src="<?php echo $imageSrc; ?>" class="card-img-top img-fluid" alt="House Image" style="height: auto; max-height: 200px; object-fit: cover;">
                                         <div class="card-body d-flex flex-column">
                                             <h5 class="card-title text-primary"><i class="fas fa-landmark"></i> <?php echo htmlspecialchars($row['title']); ?></h5>
                                             <p class="card-text text-muted"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($row['description']); ?></p>
