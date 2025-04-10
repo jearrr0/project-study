@@ -177,7 +177,7 @@
             </p>
         </div>
         <div style="flex: 1; min-width: 300px;">
-            <img src="../uploads/lam-ang.jpg" alt="Poem of Lam-ang" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+            <img src="../uploads/home/lam-ang.jpeg" alt="Poem of Lam-ang" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
         </div>
     </div>
 </section>
