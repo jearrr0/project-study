@@ -27,7 +27,7 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/project-study/home/index.php">
+                            <a class="nav-link active" aria-current="page" href="/project-study/main/home.php">
                                 <i class="bi bi-house-door"></i> Home
                             </a>
                         </li>

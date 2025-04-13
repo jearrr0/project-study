@@ -55,7 +55,7 @@ $siteResult = $stmt->get_result();
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="/project-study/home/index.php">Home</a>
+                        <a class="nav-link" href="/project-study/main/home.php">Home</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="attractionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -151,7 +151,7 @@ $siteResult = $stmt->get_result();
 </main>
 <footer style="display: flex; justify-content: space-around; align-items: center; padding: 20px; background-color: #f8f9fa; color: black;">
     <div style="text-align: center; flex: 1;">
-        <img src="../uploads/Coat_of_arms_of_the_Philippines.svg.png" alt="Philippine Coat of Arms" style="width: 100px;">
+        <img src="/project-study/uploads/Coat_of_arms_of_the_Philippines.svg.png" alt="Philippine Coat of Arms" style="width: 100px;">
         <p><strong>REPUBLIC OF THE PHILIPPINES</strong></p>
         <p>All content is in the public domain unless otherwise stated.</p>
         <p><a href="#" style="color: black;">Privacy Policy</a></p>

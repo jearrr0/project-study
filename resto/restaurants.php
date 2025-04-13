@@ -97,47 +97,155 @@ $result = $conn->query($sql);
     <h2>Affordable Dining in Candon City</h2>
     <p>Discover top-rated restaurants offering delicious meals at budget-friendly prices. Savor the taste of Candon City without overspending.</p>
 </div>
+
     <!-- Recommendations Section -->
     <div class="container-fluid mt-4">
         <div class="recommendation-section">
             <h4 class="text-center">Recommended Restaurants</h4>
-            <div id="recommendedRestaurantsCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <?php
-                    if ($result->num_rows > 0) {
-                        $active = true;
-                        while ($recRow = $result->fetch_assoc()) {
-                            $recImageSrc = (!empty($recRow['resto_image'])) 
-                                ? "data:image/jpeg;base64," . base64_encode($recRow['resto_image'])
-                                : "/project-study/uploads/default-restaurant.jpg";
-                            ?>
-                            <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
-                                <div class="recommendation-card text-center mx-auto" style="max-width: 600px;">
-                                    <img src="<?php echo $recImageSrc; ?>" class="img-fluid rounded" alt="Recommended Restaurant Image" style="max-height: 300px; object-fit: cover;">
-                                    <h6 class="mt-3"><?php echo htmlspecialchars($recRow['title']); ?></h6>
-                                    <p><?php echo htmlspecialchars($recRow['location']); ?></p>
-                                    <p><i class="fas fa-star" style="color: #ffc107;"></i> Average Rating: <?php echo number_format($recRow['avg_rating'], 1); ?> / 5</p>
-                                    <a href="restaurant-details.php?id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-modern btn-modern-primary"><i class="fas fa-map-marker-alt"></i> View</a>
-                                    <a href="/project-study/rate.php?resto_id=<?php echo $recRow['id']; ?>" class="btn btn-sm btn-modern btn-modern-warning"><i class="fas fa-star"></i> Rate</a>
-                                </div>
-                            </div>
+            <div class="row">
+                <!-- Highest Rated -->
+                <div class="col-md-4">
+                    <h5 class="text-center">Highest Rated</h5>
+                    <div id="highestRatedCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
                             <?php
-                            $active = false;
-                        }
-                    } else {
-                        echo "<p class='text-center'>No recommendations available.</p>";
-                    }
-                    ?>
+                            $highestRatedQuery = "SELECT resto.*, IFNULL(AVG(resto_ratings.rating), 0) AS avg_rating 
+                                                  FROM resto 
+                                                  LEFT JOIN resto_ratings ON resto.id = resto_ratings.resto_id 
+                                                  GROUP BY resto.id 
+                                                  ORDER BY avg_rating DESC 
+                                                  LIMIT 10";
+                            $highestRatedResult = $conn->query($highestRatedQuery);
+                            $activeClass = "active";
+
+                            if ($highestRatedResult->num_rows > 0) {
+                                while ($row = $highestRatedResult->fetch_assoc()) {
+                                    $imageSrc = (!empty($row['resto_image'])) 
+                                        ? "data:image/jpeg;base64," . base64_encode($row['resto_image'])
+                                        : "/project-study/uploads/default-restaurant.jpg";
+                                    ?>
+                                    <div class="carousel-item <?php echo $activeClass; ?>">
+                                        <div class="recommendation-card text-center mb-3">
+                                            <img src="<?php echo $imageSrc; ?>" class="img-fluid rounded" alt="Restaurant Image" style="max-height: 150px; object-fit: cover;">
+                                            <h6 class="mt-2"><?php echo htmlspecialchars($row['title']); ?></h6>
+                                            <p><i class="fas fa-star" style="color: #ffc107;"></i> Rating: <?php echo number_format($row['avg_rating'], 1); ?> / 5</p>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $activeClass = ""; // Remove active class after the first item
+                                }
+                            } else {
+                                echo "<p class='text-center'>No highest rated restaurants found.</p>";
+                            }
+                            ?>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#highestRatedCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#highestRatedCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#recommendedRestaurantsCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#recommendedRestaurantsCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+
+                <!-- Highest User Rated -->
+                <div class="col-md-4">
+                    <h5 class="text-center">Highest User Rated</h5>
+                    <div id="highestUserRatedCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <?php
+                            $highestUserRatedQuery = "SELECT resto.*, COUNT(resto_ratings.rating) AS user_ratings_count, IFNULL(AVG(resto_ratings.rating), 0) AS avg_rating 
+                                                      FROM resto 
+                                                      LEFT JOIN resto_ratings ON resto.id = resto_ratings.resto_id 
+                                                      GROUP BY resto.id 
+                                                      ORDER BY user_ratings_count DESC 
+                                                      LIMIT 10";
+                            $highestUserRatedResult = $conn->query($highestUserRatedQuery);
+                            $activeClass = "active";
+
+                            if ($highestUserRatedResult->num_rows > 0) {
+                                while ($row = $highestUserRatedResult->fetch_assoc()) {
+                                    $imageSrc = (!empty($row['resto_image'])) 
+                                        ? "data:image/jpeg;base64," . base64_encode($row['resto_image'])
+                                        : "/project-study/uploads/default-restaurant.jpg";
+                                    ?>
+                                    <div class="carousel-item <?php echo $activeClass; ?>">
+                                        <div class="recommendation-card text-center mb-3">
+                                            <img src="<?php echo $imageSrc; ?>" class="img-fluid rounded" alt="Restaurant Image" style="max-height: 150px; object-fit: cover;">
+                                            <h6 class="mt-2"><?php echo htmlspecialchars($row['title']); ?></h6>
+                                            <p><i class="fas fa-users"></i> User Ratings: <?php echo $row['user_ratings_count']; ?></p>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $activeClass = ""; // Remove active class after the first item
+                                }
+                            } else {
+                                echo "<p class='text-center'>No highest user rated restaurants found.</p>";
+                            }
+                            ?>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#highestUserRatedCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#highestUserRatedCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Must Try (Low Rated) -->
+                <div class="col-md-4">
+                    <h5 class="text-center">Must Try</h5>
+                    <div id="mustTryCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <?php
+                            $mustTryQuery = "SELECT resto.*, IFNULL(AVG(resto_ratings.rating), 0) AS avg_rating 
+                                             FROM resto 
+                                             LEFT JOIN resto_ratings ON resto.id = resto_ratings.resto_id 
+                                             GROUP BY resto.id 
+                                             ORDER BY avg_rating ASC 
+                                             LIMIT 10";
+                            $mustTryResult = $conn->query($mustTryQuery);
+                            $activeClass = "active";
+
+                            if ($mustTryResult->num_rows > 0) {
+                                while ($row = $mustTryResult->fetch_assoc()) {
+                                    $imageSrc = (!empty($row['resto_image'])) 
+                                        ? "data:image/jpeg;base64," . base64_encode($row['resto_image'])
+                                        : "/project-study/uploads/default-restaurant.jpg";
+                                    ?>
+                                    <div class="carousel-item <?php echo $activeClass; ?>">
+                                        <div class="recommendation-card text-center mb-3">
+                                            <img src="<?php echo $imageSrc; ?>" class="img-fluid rounded" alt="Restaurant Image" style="max-height: 150px; object-fit: cover;">
+                                            <h6 class="mt-2"><?php echo htmlspecialchars($row['title']); ?></h6>
+                                            <p><i class="fas fa-star" style="color: #ffc107;"></i> Rating: <?php echo number_format($row['avg_rating'], 1); ?> / 5</p>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $activeClass = ""; // Remove active class after the first item
+                                }
+                            } else {
+                                echo "<p class='text-center'>No must-try restaurants found.</p>";
+                            }
+                            ?>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#mustTryCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#mustTryCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
             </div>
+            <div class="text-center mt-4">
+
         </div>
     </div>
 

@@ -113,11 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <li class="nav-item">
                         <a class="nav-link" href="/project-study/profile/login.php"><i class="bi bi-person"></i> Profile</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-outline-danger text-black px-3 ms-2" href="profile.php?logout=true" style="border: 2px solid #dc3545; border-radius: 20px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </a>
-                    </li>
+               
                 </ul>
             </div>
         </div>
