@@ -195,18 +195,23 @@ if (isset($_POST['submit'])) {
     $promo = $_POST['promo'];
     $link = $_POST['link'];
 
-    $imgData = null;
+    $imgPath = null;
     if (isset($_FILES['img']) && $_FILES['img']['error'] == 0) {
-        $imgData = file_get_contents($_FILES['img']['tmp_name']);
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/project-study/uploads/hotels/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $imgPath = $uploadDir . basename($_FILES['img']['name']);
+        if (!move_uploaded_file($_FILES['img']['tmp_name'], $imgPath)) {
+            echo "<p style='color:red;'>Error uploading image.</p>";
+            exit;
+        }
+        $imgPath = '/project-study/uploads/hotels/' . basename($_FILES['img']['name']);
     }
 
     $stmt = $conn->prepare("INSERT INTO hotels (title, description, location, contact_number, email, rooms, type, nearby_places, amenities_facilities, img, latitude, longitude, promo, link, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')");
-    $stmt->bind_param("ssssissssssdds", $title, $description, $location, $contact_number, $email, $rooms, $type, $nearby_places, $amenities_facilities, $imgData, $latitude, $longitude, $promo, $link);
+    $stmt->bind_param("ssssisssssssss", $title, $description, $location, $contact_number, $email, $rooms, $type, $nearby_places, $amenities_facilities, $imgPath, $latitude, $longitude, $promo, $link);
 
-    // Set blob parameter
-    $null = NULL;
-    $stmt->send_long_data(9, $imgData);
-    
     if ($stmt->execute()) {
         echo "<script>showPopup();</script>";
     } else {

@@ -16,6 +16,7 @@ if ($conn->connect_error) {
 $sql = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating, COUNT(hotel_ratings.rating) AS rating_count 
         FROM hotels 
         LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+        WHERE hotels.status != 'pending' 
         GROUP BY hotels.id 
         ORDER BY RAND() LIMIT 3"; // Fetch 3 random hotels with average ratings and rating count
 $result = $conn->query($sql);
@@ -115,6 +116,7 @@ $result = $conn->query($sql);
                             $highRateQuery = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating, COUNT(hotel_ratings.rating) AS rating_count 
                                               FROM hotels 
                                               LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+                                              WHERE hotels.status != 'pending' 
                                               GROUP BY hotels.id 
                                               ORDER BY avg_rating DESC LIMIT 3"; // Top 3 highly rated hotels with rating count
                             $highRateResult = $conn->query($highRateQuery);
@@ -169,6 +171,7 @@ $result = $conn->query($sql);
                             $lowRateQuery = "SELECT hotels.*, IFNULL(AVG(hotel_ratings.rating), 0) AS avg_rating, COUNT(hotel_ratings.rating) AS rating_count 
                                              FROM hotels 
                                              LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+                                             WHERE hotels.status != 'pending' 
                                              GROUP BY hotels.id 
                                              ORDER BY avg_rating ASC LIMIT 3"; // Top 3 low-rated hotels with rating count
                             $lowRateResult = $conn->query($lowRateQuery);
@@ -239,6 +242,7 @@ $result = $conn->query($sql);
                                                   COUNT(hotel_ratings.rating) AS rating_count 
                                            FROM hotels 
                                            LEFT JOIN hotel_ratings ON hotels.id = hotel_ratings.hotel_id 
+                                           WHERE hotels.status != 'pending' 
                                            GROUP BY hotels.id"; // Include rating count in hotel listings
                             $hotelResult = $conn->query($hotelQuery);
 
