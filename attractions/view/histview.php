@@ -17,7 +17,7 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Fetch the details of the selected historical site
 $sql = "SELECT title, description, location, img, latitude, longitude 
-        FROM experience 
+        FROM histo 
         WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);

@@ -9,17 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
 </head>
 <body style="background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);">
-<?php include '../includes/nav_footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/project-study/includes/nav_footer.php'; ?>
 <?php renderNav(); ?>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero" style="position: relative; height: 100vh; color: white; display: flex; align-items: center; justify-content: center; overflow: hidden; width: 100%;">
-        <img src="../uploads/home/image-2-1024x724.jpg" alt="Hero Background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; max-width: 100%; max-height: 100%;">
-        <div class="hero-content" style="text-align: center; background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 10px; width: 100%; max-width: 1200px; margin: auto;">
-            <h1>Welcome to Candon City</h1>
-            <p>Candon City, located in Ilocos Sur, is known as the "Tobacco Capital of the Philippines" and is famous for its rich history, vibrant culture, and scenic attractions.</p>
-        </div>
-    </section>
+<?php renderHero(); ?>
+<?php renderChatbot(); ?>
 
     <!-- Title Sections -->
     <section id="about" class="section" style="text-align: center; padding: 20px; background: linear-gradient(to bottom, #007bff, #0056b3); color: white; position: relative; overflow: hidden;">
@@ -93,6 +87,16 @@
                     It is famous for its vibrant culture, historical landmarks, and contributions to the country's tobacco industry. 
                     The city's name is derived from the "kandong" tree, which played a significant role in its early history.
                 </p>
+                <p style="font-size: 1.2rem; line-height: 1.6; color: #6c757d;">
+                    During the Spanish period, Candon was a significant trading hub for tobacco and other agricultural products. 
+                    The city played a vital role in the Philippine Revolution, with local heroes contributing to the fight for independence. 
+                    Today, Candon City continues to thrive as a center of commerce and culture in the Ilocos region.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 1.6; color: #6c757d;">
+                    The city is also home to various festivals and traditions that celebrate its heritage, such as the Tobacco Festival, 
+                    which showcases the importance of the tobacco industry to the local economy and culture. Visitors can explore 
+                    historical landmarks, including ancestral houses and centuries-old churches, to gain a deeper understanding of Candon's past.
+                </p>
             </div>
             <div style="flex: 1; min-width: 300px;">
                 <img src="../uploads/Screen-Shot-2022-11-28-at-10.02.15-PM.png" alt="History of Candon City" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
@@ -111,26 +115,40 @@
                     Discover the beauty and history of the San Juan de Sahagun Church, a modern architectural marvel that blends tradition with contemporary design. 
                     Located in the heart of Candon City, this iconic landmark is a must-visit for history enthusiasts and architecture lovers alike.
                 </p>
-
+                <p style="font-size: 1.2rem; line-height: 1.6; color: #6c757d;">
+                    The church is named after St. John of Sahagun, a revered saint known for his devotion and miracles. 
+                    Its intricate design features stained glass windows, ornate carvings, and a bell tower that offers a panoramic view of the city. 
+                    The church also serves as a venue for significant religious events and community gatherings, making it a cornerstone of Candon's spiritual life.
+                </p>
             </div>
         </div>
     </section>
-<!-- Poem of Lam-ang Section -->
-<section id="poem" class="section" style="padding: 60px 20px; background-color: #f0f4f8; text-align: center; margin-bottom: 20px; transition: transform 0.3s, box-shadow 0.3s;">
-    <h2 style="font-size: 2.5rem; font-weight: bold; color: #343a40; margin-bottom: 20px;">The Poem of Lam-ang</h2>
-    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 300px;">
-            <p style="font-size: 1.2rem; line-height: 1.6; color: #6c757d;">
-                The epic of Lam-ang is a famous Ilocano epic that tells the story of a legendary hero. 
-                It narrates his extraordinary adventures, his love for Ines Kannoyan, and his bravery in facing challenges. 
-                This timeless tale reflects the rich culture and traditions of the Ilocano people.
-            </p>
+
+    <section id="poem" class="section" style="padding: 60px 20px; background-color: #f0f4f8; text-align: center; margin-bottom: 20px; transition: transform 0.3s, box-shadow 0.3s;">
+        <h2 style="font-size: 2.5rem; font-weight: bold; color: #343a40; margin-bottom: 20px;">The Poem of Lam-ang</h2>
+        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <p style="font-size: 1.2rem; line-height: 1.6; color: #6c757d;">
+                    The epic of Lam-ang is a famous Ilocano epic that tells the story of a legendary hero. 
+                    It narrates his extraordinary adventures, his love for Ines Kannoyan, and his bravery in facing challenges. 
+                    This timeless tale reflects the rich culture and traditions of the Ilocano people.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 1.6; color: #6c757d;">
+                    Lam-ang's story begins with his miraculous birth and his quest to avenge his father's death. 
+                    Along the way, he demonstrates superhuman strength and intelligence, overcoming obstacles that test his character and resolve. 
+                    His love story with Ines Kannoyan is a testament to his loyalty and courage, making him a beloved figure in Philippine folklore.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 1.6; color: #6c757d;">
+                    The epic also highlights the values of family, bravery, and resilience, which are deeply ingrained in Ilocano culture. 
+                    It serves as a source of inspiration and pride for the people of Candon City and the Ilocos region, preserving their heritage for future generations.
+                </p>
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <img src="../uploads/home/lam-ang.jpeg" alt="Poem of Lam-ang" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+            </div>
         </div>
-        <div style="flex: 1; min-width: 300px;">
-            <img src="../uploads/home/lam-ang.jpeg" alt="Poem of Lam-ang" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
-        </div>
-    </div>
-</section>
+    </section>
+
 <!-- Local Products Section -->
 <section id="local-products" class="section" style="padding: 60px 20px; background-color: #f8f9fa; text-align: center; margin-bottom: 20px; transition: transform 0.3s, box-shadow 0.3s;">
     <h2 style="font-size: 2.5rem; font-weight: bold; color: #343a40; margin-bottom: 20px;">Local Products of Candon City</h2>

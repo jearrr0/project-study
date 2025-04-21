@@ -30,7 +30,6 @@ function renderNav() {
                         <li><a class="dropdown-item" href="../attractions/pages/experienceprogram.php" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-people"></i> Experience Program</a></li>
                         <li><a class="dropdown-item" href="../attractions/pages/restaurants.php" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-shop"></i> Restaurants</a></li>
                         <li><a class="dropdown-item" href="/project-study/hotels/hotels.php" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-building"></i> Hotels</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-bag"></i> Shopping and Pasalubong</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -38,17 +37,17 @@ function renderNav() {
                         <i class="bi bi-tools"></i> Services
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="position: absolute;">
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-bus-front"></i> Transport Services</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-cash-coin"></i> Banking and Finance</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-hospital"></i> Hospitals</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-heart-pulse"></i> Health and Personal Care</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-shop-window"></i> Convenience Store</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-fuel-pump"></i> Gas Stations and Auto Services</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-book"></i> Books/Schools/Art Supplies</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-hammer"></i> Hardware</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-tv"></i> Appliance Store</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-cart"></i> Grocery Stores and Supermarkets</a></li>
-                        <li><a class="dropdown-item" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-capsule"></i> Pharmacy and Drug Stores</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-bus-front"></i> Transport Services</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-bank"></i> Banking & Finance</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-hospital"></i> Hospitals</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-heart-pulse"></i> Health & Personal Care</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-shop"></i> Convenience Stores</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-fuel-pump"></i> Gas Stations & Auto Services</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-book"></i> Books/School/Art Supplies</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-hammer"></i> Hardware</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-tv"></i> Appliance Store</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-cart"></i> Grocery Stores & Supermarkets</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-capsule"></i> Pharmacy / Drug Stores</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -61,10 +60,10 @@ function renderNav() {
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/project-study/includes/bulletin.php" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="bi bi-newspaper"></i> Bulletin</a>
+                    <a class="nav-link" href="/project-study/bulletin/bulletin.php" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="bi bi-newspaper"></i> Bulletin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/project-study/includes/contact.php" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="bi bi-envelope"></i> Contact Us</a>
+                    <a class="nav-link" href="/project-study/contact/contact.php" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="bi bi-envelope"></i> Contact Us</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/project-study/profile/profile.php" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="bi bi-person"></i> Profile</a>
@@ -98,7 +97,6 @@ function renderNav() {
                             <li><a class="dropdown-item" href="../attractions/pages/experienceprogram.php"><i class="bi bi-people"></i> Experience Program</a></li>
                             <li><a class="dropdown-item" href="../attractions/pages/restaurants.php"><i class="bi bi-shop"></i> Restaurants</a></li>
                             <li><a class="dropdown-item" href="../attractions/pages/hotels.php"><i class="bi bi-building"></i> Hotels</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-bag"></i> Shopping and Pasalubong</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -107,16 +105,16 @@ function renderNav() {
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
                             <li><a class="dropdown-item" href="#"><i class="bi bi-bus-front"></i> Transport Services</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-cash-coin"></i> Banking and Finance</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bank"></i> Banking & Finance</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-hospital"></i> Hospitals</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-heart-pulse"></i> Health and Personal Care</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-shop-window"></i> Convenience Store</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-fuel-pump"></i> Gas Stations and Auto Services</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-book"></i> Books/Schools/Art Supplies</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-heart-pulse"></i> Health & Personal Care</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-shop"></i> Convenience Stores</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-fuel-pump"></i> Gas Stations & Auto Services</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-book"></i> Books/School/Art Supplies</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-hammer"></i> Hardware</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-tv"></i> Appliance Store</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-cart"></i> Grocery Stores and Supermarkets</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-capsule"></i> Pharmacy and Drug Stores</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-cart"></i> Grocery Stores & Supermarkets</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-capsule"></i> Pharmacy / Drug Stores</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -132,7 +130,7 @@ function renderNav() {
                         <a class="nav-link" href="/project-study/includes/bulletin.php"><i class="bi bi-newspaper"></i> Bulletin</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/project-study/includes/contact.php"><i class="bi bi-envelope"></i> Contact Us</a>
+                        <a class="nav-link" href="/project-study/contact/contact.php"><i class="bi bi-envelope"></i> Contact Us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/project-study/profile/profile.php"><i class="bi bi-person"></i> Profile</a>

@@ -12,15 +12,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch recreational facilities from the database
+// Fetch historical tourist sites from the database
 $sql = "SELECT id, title, description, location, img, latitude, longitude 
-        FROM experience";
+        FROM histo";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Recreational Facilities - CandonXplore</title>
+    <title>Historical Tourist Sites - CandonXplore</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -28,7 +28,7 @@ $result = $conn->query($sql);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome -->
 
     <style>
- body {
+        body {
             margin: 2;
             padding: 2;
             box-sizing: border-box;
@@ -72,6 +72,49 @@ $result = $conn->query($sql);
         .btn-modern i {
             margin-right: 5px;
         }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px; /* Reduced gap for a tighter layout */
+            margin-top: 30px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item .btn-view-more {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 123, 255, 0.8);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .gallery-item .btn-view-more:hover {
+            background: rgba(0, 123, 255, 1);
+        }
     </style>
 </head>
 <body>
@@ -83,64 +126,37 @@ $result = $conn->query($sql);
 <!-- Title Section -->
 <section class="text-center py-5 bg-light">
     <div class="container">
-        <h1 class="display-4 fw-bold">Recreational Facilities</h1>
-        <p class="lead text-muted">Explore the best recreational facilities in Candon City. Find your next adventure or a place to relax.</p>
+        <h1 class="display-4 fw-bold">Historical Tourist Sites</h1>
+        <p class="lead text-muted">Discover the rich history of Candon City through its iconic landmarks and historical sites. Explore the stories that shaped the city's vibrant culture.</p>
     </div>
 </section>
 
-<!-- Facilities Section -->
-<main>
-    <div class="container mt-4">
-        <div class="row row-cols-1 row-cols-md-5 g-4">
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $imageSrc = (!empty($row['img'])) 
-                        ? "data:image/jpeg;base64," . base64_encode($row['img'])
-                        : "/project-study/uploads/default-facility.jpg"; // Default image
-                    ?>
-                    <div class="col">
-                        <div class="card shadow-lg border-0 h-100">
-                            <img src="<?php echo $imageSrc; ?>" class="card-img-top rounded-top" alt="Facility Image" style="height: 200px; object-fit: cover;">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title text-truncate text-primary fw-bold"><?php echo htmlspecialchars($row['title']); ?></h5>
-                                <p class="text-muted mb-2"><i class="fa-solid fa-location-dot"></i> <?php echo htmlspecialchars($row['location']); ?></p>
-                                <p class="mb-3 text-secondary"><?php echo htmlspecialchars($row['description']); ?></p>
-                                <div class="mt-auto">
-                                    <a href="<?php echo (!empty($row['latitude']) && !empty($row['longitude'])) 
-                                        ? "https://www.google.com/maps/dir/?api=1&destination={$row['latitude']},{$row['longitude']}" 
-                                        : '#'; ?>" 
-                                        target="_blank" 
-                                        class="btn btn-modern btn-modern-primary btn-sm w-100 mb-2" 
-                                        <?php if (empty($row['latitude']) || empty($row['longitude'])) echo 'disabled'; ?>>
-                                        <i class="fas fa-compass"></i> Get Directions
-                                    </a>
-                                    <a href="#" class="btn btn-outline-primary btn-sm w-100">View More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                }
-            } else {
-                echo "<p class='text-center'>No recreational facilities found.</p>";
+<!-- Gallery Section -->
+<section class="container">
+    <div class="gallery">
+        <?php
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $imageSrc = (!empty($row['img'])) 
+                    ? "data:image/jpeg;base64," . base64_encode($row['img'])
+                    : "/project-study/uploads/default-historical-site.jpg"; // Default image
+                ?>
+                <div class="gallery-item">
+                    <img src="<?php echo $imageSrc; ?>" alt="Historical Site Image">
+                    <a href="/project-study/attractions/view/histview.php?id=<?php echo $row['id']; ?>" class="btn-view-more">View More</a>
+                </div>
+                <?php
             }
-            ?>
-        </div>
-    </div>
-</main>
-
-<!-- Description Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center fw-bold">Why Visit Our Recreational Facilities?</h2>
-        <p class="text-center text-muted mt-3">Our facilities offer a perfect blend of relaxation and adventure. Whether you're looking for a serene escape or an exciting activity, we have something for everyone. Come and experience the beauty and fun of Candon City!</p>
+        } else {
+            echo "<p class='text-center'>No historical sites found.</p>";
+        }
+        ?>
     </div>
 </section>
 
 <?php renderFooter(); ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

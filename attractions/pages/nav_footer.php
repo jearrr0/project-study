@@ -32,8 +32,23 @@ function renderNav() {
                         <li><a class="dropdown-item" href="/project-study/hotels/hotels.php" style="font-family: 'Poppins', sans-serif; font-size: 1rem;"><i class="bi bi-building"></i> Hotels</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="alert('Services are not yet available. Please check back later!');" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="bi bi-tools"></i> Services</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
+                        <i class="bi bi-tools"></i> Services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="position: absolute;">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-bus-front"></i> Transport Services</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-bank"></i> Banking & Finance</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-hospital"></i> Hospitals</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-heart-pulse"></i> Health & Personal Care</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-shop"></i> Convenience Stores</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-fuel-pump"></i> Gas Stations & Auto Services</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-book"></i> Books/School/Art Supplies</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-hammer"></i> Hardware</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-tv"></i> Appliance Store</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-cart"></i> Grocery Stores & Supermarkets</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-capsule"></i> Pharmacy / Drug Stores</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="experienceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #007bff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
@@ -84,8 +99,23 @@ function renderNav() {
                             <li><a class="dropdown-item" href="../attractions/pages/hotels.php"><i class="bi bi-building"></i> Hotels</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="alert('Services are not yet available. Please check back later!');"><i class="bi bi-tools"></i> Services</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-tools"></i> Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bus-front"></i> Transport Services</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bank"></i> Banking & Finance</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-hospital"></i> Hospitals</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-heart-pulse"></i> Health & Personal Care</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-shop"></i> Convenience Stores</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-fuel-pump"></i> Gas Stations & Auto Services</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-book"></i> Books/School/Art Supplies</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-hammer"></i> Hardware</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-tv"></i> Appliance Store</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-cart"></i> Grocery Stores & Supermarkets</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-capsule"></i> Pharmacy / Drug Stores</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="experienceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
